@@ -1,21 +1,13 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
-import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/jwt";
 import { TRPCError } from "@trpc/server";
-import { loginSchema } from "shared";
+import { loginSchema, registerSchema } from "shared";
 
 export const authRouter = router({
   // Регистрация работника (публичная)
   register: publicProcedure
-    .input(
-      z.object({
-        email: z.string().email("Некорректный email"),
-        password: z.string().min(6, "Пароль минимум 6 символов"),
-        name: z.string().min(1, "Имя обязательно"),
-        phone: z.string().optional(),
-      }),
-    )
+    .input(registerSchema)
     .mutation(async ({ ctx, input }) => {
       const existing = await ctx.prisma.worker.findUnique({
         where: { email: input.email },
