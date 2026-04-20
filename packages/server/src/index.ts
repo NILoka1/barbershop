@@ -30,3 +30,6 @@ app.use(
 app.listen(PORT, () => {
   console.log(`🚀 http://localhost:${PORT}`);
 });
+
+export {appRouter}
+export type {AppRouter} from './routers/index'
