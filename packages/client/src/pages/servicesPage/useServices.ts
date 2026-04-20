@@ -1,25 +1,17 @@
 import { trpc } from "../../main";
 import { useState } from "react";
-import { type AddServiceInput } from "shared";
+import { type AddServiceInput, type UpdateServiceInput } from "shared";
 import { useDisclosure } from "@mantine/hooks";
 import { useCreateServices } from "../../api/services/create";
 import { useUpdateServices } from "../../api/services/update";
 import { useDeleteServices } from "../../api/services/delete";
 
-interface EditingService {
-  id: string;
-  name: string;
-  category: AddServiceInput["category"];
-  duration: number;
-  price: number;
-  description?: string;
-}
 
 const useServices = () => {
   const servicesList = trpc.services.getAll.useQuery();
 
   const [opened, { open, close }] = useDisclosure(false);
-  const [editingService, setEditingService] = useState<EditingService | null>(
+  const [editingService, setEditingService] = useState<UpdateServiceInput | null>(
     null,
   );
 
@@ -37,17 +29,24 @@ const useServices = () => {
     setEditingService({
       id: service.id,
       name: service.name,
-      category: service.category as EditingService["category"],
+      category: service.category as UpdateServiceInput["category"],
       duration: service.duration,
       price: Number(service.price),
       description: service.description || undefined,
     });
     open();
   };
-  const handleSubmit = async (values: AddServiceInput & { id: string }) => {
-    if (editingService) {
-      UpdateServices.mutate(values);
-      console.log("Обновить:", values);
+  const handleSubmit = async (values: AddServiceInput & { id?: string }) => {
+    if (values.id) {
+    const updateData = {
+      id: values.id,
+      name: values.name,
+      category: values.category,
+      duration: values.duration,
+      price: values.price,
+      description: values.description,
+    };
+    UpdateServices.mutate(updateData);
     } else {
       CreateServices.mutate(values);
       console.log("Создать:", values);

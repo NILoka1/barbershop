@@ -1,20 +1,13 @@
 // src/components/ServiceModal/ServiceModal.tsx
 import { Modal, TextInput, NumberInput, Select, Button, Stack,Flex } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
-import { addServiceSchema, type AddServiceInput, categoryOptions } from 'shared';
+import { addServiceSchema, type AddServiceInput, categoryOptions, type UpdateServiceInput } from 'shared';
 import { useEffect } from "react";
 
 interface ServiceModalProps {
   opened: boolean;
   onClose: () => void;
-  service?: {  // 👇 Если передан — редактирование, если нет — создание
-    id: string;
-    name: string;
-    category: string;
-    duration: number;
-    price: number;
-    description?: string;
-  }|null;
+  service?: UpdateServiceInput|null;
   onSubmit: (values: AddServiceInput& {id?:string}) => void;
   isLoading?: boolean;
 }
