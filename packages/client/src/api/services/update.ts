@@ -1,3 +1,4 @@
+import type { UpdateServiceInput } from "shared";
 import { trpc } from "../../main";
 
 
@@ -5,7 +6,7 @@ import { trpc } from "../../main";
 export function useUpdateServices() {
   const utils = trpc.useUtils();
   return trpc.services.update.useMutation({
-    onMutate: async (updatedService) => {
+    onMutate: async (updatedService: UpdateServiceInput) => {
       await utils.services.getAll.cancel();
 
       const previousServices = utils.services.getAll.getData();
@@ -14,7 +15,7 @@ export function useUpdateServices() {
         if (!old) return old;
         return old.map((s) =>
           s.id === updatedService.id
-            ? { ...s, ...updatedService, price: updatedService.price as any }
+            ? { ...s, ...updatedService, price: updatedService.price ?? s.price }
             : s,
         );
       });

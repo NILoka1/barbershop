@@ -17,8 +17,5 @@ export function useDeleteServices() {
     onError: (err, deletedId, context) => {
       utils.services.getAll.setData(undefined, context?.previousServices);
     },
-    onSettled: () => {
-      utils.services.getAll.invalidate();
-    },
   });
 }

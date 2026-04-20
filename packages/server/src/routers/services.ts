@@ -1,4 +1,4 @@
-import { addServiceSchema } from "shared";
+import { addServiceSchema, updateServiceSchema } from "shared";
 import { router, publicProcedure, adminProcedure } from "../trpc";
 import { z } from "zod";
 
@@ -30,17 +30,7 @@ export const servicesRouter = router({
 
   // Обновить услугу (только админ)
   update: adminProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        name: z.string().min(1).optional(),
-        category: z.enum(["SALON", "MANICURE", "COSMETICS"]).optional(),
-        duration: z.number().min(5).optional(),
-        price: z.number().min(0).optional(),
-        description: z.string().optional(),
-        color: z.string().optional(),
-      }),
-    )
+    .input(updateServiceSchema)
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
       return ctx.prisma.service.update({
