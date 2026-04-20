@@ -1,4 +1,4 @@
-import { Button, Flex, Stack, Text, TextInput } from "@mantine/core";
+import { Button, Flex, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
 import { useLogin } from "./useLogin";
 
 function LoginPage() {
@@ -11,7 +11,7 @@ function LoginPage() {
         <Flex justify={"center"} align={"center"} h="100vh">
           <Stack gap={5} w={300}>
             <TextInput label="email" {...form.getInputProps("email")} />
-            <TextInput label="Пароль" {...form.getInputProps("password")} />
+            <PasswordInput label="Пароль" {...form.getInputProps("password")} />
             <Button type="submit">
               <Text>Войти</Text>
             </Button>
