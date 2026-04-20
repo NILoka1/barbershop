@@ -4,16 +4,18 @@ import LoginPage from "./pages/loginPage/LoginPage";
 import { HomePage } from "./pages/homePage/HomePage";
 import WorkerDashbord from "./pages/workerDashbord/WorkerDashbord";
 import { AppSh } from "./components/AppShell";
+import ServicesPage from "./pages/servicesPage/ServicesPage";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="login" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
 
         <Route element={<ProtectedRoute />}>
         <Route element={<AppSh><Outlet /></AppSh>}>
           <Route path="/workerDashbord" element={<WorkerDashbord />} />
+          <Route path="/services" element={<ServicesPage/>}></Route>
         </Route>
         </Route>
       </Routes>

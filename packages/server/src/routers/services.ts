@@ -1,11 +1,12 @@
-import { router, publicProcedure, adminProcedure } from '../trpc';
-import { z } from 'zod';
+import { addServiceSchema } from "shared";
+import { router, publicProcedure, adminProcedure } from "../trpc";
+import { z } from "zod";
 
 export const servicesRouter = router({
   // Получить все услуги
   getAll: publicProcedure.query(async ({ ctx }) => {
     return ctx.prisma.service.findMany({
-      orderBy: { name: 'asc' },
+      orderBy: { name: "asc" },
     });
   }),
 
@@ -20,16 +21,7 @@ export const servicesRouter = router({
 
   // Создать услугу (только админ)
   create: adminProcedure
-    .input(
-      z.object({
-        name: z.string().min(1),
-        category: z.enum(['SALON', 'MANICURE', 'COSMETICS']),
-        duration: z.number().min(5),
-        price: z.number().min(0),
-        description: z.string().optional(),
-        color: z.string().optional(),
-      })
-    )
+    .input(addServiceSchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.prisma.service.create({
         data: input,
@@ -42,12 +34,12 @@ export const servicesRouter = router({
       z.object({
         id: z.string(),
         name: z.string().min(1).optional(),
-        category: z.enum(['SALON', 'MANICURE', 'COSMETICS']).optional(),
+        category: z.enum(["SALON", "MANICURE", "COSMETICS"]).optional(),
         duration: z.number().min(5).optional(),
         price: z.number().min(0).optional(),
         description: z.string().optional(),
         color: z.string().optional(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;

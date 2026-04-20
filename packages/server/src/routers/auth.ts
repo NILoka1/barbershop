@@ -2,7 +2,7 @@ import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/jwt";
-import { AnyRouter, TRPCError } from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { loginSchema } from "shared";
 
 export const authRouter = router({

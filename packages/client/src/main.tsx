@@ -16,7 +16,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <MantineProvider>
+        <MantineProvider defaultColorScheme='dark'>
           <App />
         </MantineProvider>
       </QueryClientProvider>
