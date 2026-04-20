@@ -1,24 +1,16 @@
-import { Button, Flex, Stack, Text, TextInput } from "@mantine/core";
-import { useLogin } from "./pages/loginPage/useLogin";
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import LoginPage from "./pages/loginPage/LoginPage";
 function App() {
-  const {form, handleSubmit} = useLogin()
-  
-
   return (
-    <>
-      <form onSubmit={form.onSubmit(handleSubmit)}>
-        <Flex justify={"center"} align={"center"} h="100vh">
-          <Stack gap={5} w={300}>
-            <TextInput label="email" {...form.getInputProps("email")} />
-            <TextInput label="Пароль" {...form.getInputProps("password")} />
-            <Button type="submit">
-              <Text>Войти</Text>
-            </Button>
-          </Stack>
-        </Flex>
-      </form>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/"/>
+        <Route path="login" element={<LoginPage/>}/>
+
+        <Route element={<ProtectedRoute />}></Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
