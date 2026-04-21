@@ -8,3 +8,13 @@ export const workersRegistrate = z.object({
 })
 
 export type workersRegistrateInput = z.infer<typeof workersRegistrate>;
+
+export const workersUpdate = z.object({
+    id: z.string(),
+    name: z.string().min(1,"ФИО обязательно"),
+    email: z.string().email("Некоректная почта"),
+    phone: z.string().nullable(),
+    isAdmin: z.boolean()
+})
+
+export type workersUpdateInput = z.infer<typeof workersUpdate>

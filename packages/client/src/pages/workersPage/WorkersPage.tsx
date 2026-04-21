@@ -11,18 +11,13 @@ import {
 import useWorkers from "./useWorkers";
 import { IconAlertCircle, IconEdit, IconTrash } from "@tabler/icons-react";
 import AddWorkersModal from "./AddWorkersModal";
+import UpdateWorkersModal from "./UpdateWorkersModal";
+import { useModalStore } from "../../stores/workerModalStore";
 
 const WorkersPage = () => {
-  const {
-    workersList,
-    isLoading,
-    error,
-    opened,
-    close,
-    open,
-    handleCreate,
-    handleUpdate,
-  } = useWorkers();
+  const { workersList, isLoading, error } = useWorkers();
+  const openEditModal = useModalStore((state) => state.openEditWorkerModal);
+  const openCreateModal = useModalStore((state) => state.openCreateWorkerModal);
 
   if (isLoading) {
     return (
@@ -44,17 +39,16 @@ const WorkersPage = () => {
     return (
       <Stack>
         <Text>Ещё нет ни одного работника</Text>
-        <Button onClick={open}>Добавить работника</Button>
+        <Button onClick={openCreateModal}>Добавить работника</Button>
       </Stack>
     );
   }
-
   return (
     <>
       <Stack>
         <Flex justify="space-between" align="center">
           <Title order={2}>Мастера</Title>
-          <Button onClick={open}>Добавить мастера</Button>
+          <Button onClick={openCreateModal}>Добавить мастера</Button>
         </Flex>
 
         <Table striped highlightOnHover withTableBorder>
@@ -76,7 +70,11 @@ const WorkersPage = () => {
                 <Table.Td>{worker.isAdmin ? "Да" : "Нет"}</Table.Td>
                 <Table.Td>
                   <Flex gap="xs">
-                    <Button variant="subtle" size="xs">
+                    <Button
+                      onClick={() => openEditModal(worker)}
+                      variant="subtle"
+                      size="xs"
+                    >
                       <IconEdit size={16} />
                     </Button>
                     <Button variant="subtle" color="red" size="xs">
@@ -89,13 +87,8 @@ const WorkersPage = () => {
           </Table.Tbody>
         </Table>
       </Stack>
-
-      <AddWorkersModal
-        isLoading={isLoading}
-        onClose={close}
-        opened={opened}
-        handleSubmit={handleCreate}
-      />
+      <AddWorkersModal />
+      <UpdateWorkersModal />
     </>
   );
 };
