@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { adminProcedure, protectedProcedure, router } from "../trpc";
-import { workersRegistrate } from "shared";
+import { workersRegistrate, workersUpdate } from "shared";
 import bcrypt from "bcryptjs";
 export const workersRouter = router({
   getAll: protectedProcedure.query(async ({ ctx }) => {
@@ -41,6 +41,15 @@ export const workersRouter = router({
         },
         select: { id: true, email: true, name: true, isAdmin: true },
       });
-      return {worker}
+      return { worker };
+    }),
+  update: adminProcedure
+    .input(workersUpdate)
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...data } = input;
+      return ctx.prisma.worker.update({
+        where: { id },
+        data,
+      });
     }),
 });
