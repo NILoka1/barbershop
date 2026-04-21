@@ -2,12 +2,17 @@ import { Button, Checkbox, Flex, Modal, Stack, TextInput } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { workersUpdate, type workersUpdateInput } from "shared";
 import { useModalStore } from "../../stores/workerModalStore";
+import { useUpdateWorker } from "../../api/workers/update";
+import { useEffect } from "react";
 
 const UpdateWorkersModal = () => {
-  const { isEditWorkerOpened, editingWorker, closeEditWorkerModal } = useModalStore();
+  const { isEditWorkerOpened, editingWorker, closeEditWorkerModal } =
+    useModalStore();
 
-  const handleUpdate = () => {
-    closeEditWorkerModal()
+  const UpdateWorker = useUpdateWorker();
+  const handleUpdate = (values: workersUpdateInput) => {
+    UpdateWorker.mutate(values);
+    closeEditWorkerModal();
   };
 
   const form = useForm<workersUpdateInput>({
@@ -21,11 +26,16 @@ const UpdateWorkersModal = () => {
     validate: zodResolver(workersUpdate),
   });
 
+  useEffect(() => {
+    if (editingWorker) {
+      form.setValues(editingWorker);
+    }
+  }, [editingWorker]);
+
   if (!isEditWorkerOpened || !editingWorker) return null;
 
   return (
     <Modal
-      key={editingWorker.id}
       opened={isEditWorkerOpened}
       onClose={closeEditWorkerModal}
       title={"Изменить работника"}
