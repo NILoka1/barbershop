@@ -43,7 +43,6 @@ export const AppSh = ({ children }: AppShProps) => {
       <AppShell.Navbar>
         <Flex p="sm" h="100%" direction="column" justify="space-between">
           <Flex direction="column" gap="xs">
-            {/* 👇 МАПИНГ СПИСКА */}
             {navList.map((item) => (
               <NavLink
                 key={item.link}
@@ -52,6 +51,7 @@ export const AppSh = ({ children }: AppShProps) => {
                 label={item.name}
                 active={location.pathname === item.link}
                 variant="filled"
+                onClick={toggle}
               />
             ))}
           </Flex>
