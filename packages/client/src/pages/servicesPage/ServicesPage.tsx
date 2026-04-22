@@ -65,49 +65,50 @@ const ServicesPage = () => {
             Добавить услугу
           </Button>
         </Flex>
-
-        <Table striped highlightOnHover withTableBorder>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Название</Table.Th>
-              <Table.Th>Категория</Table.Th>
-              <Table.Th>Длительность</Table.Th>
-              <Table.Th>Цена</Table.Th>
-              <Table.Th>Действия</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {servicesList.data.map((service) => (
-              <Table.Tr key={service.id}>
-                <Table.Td>{service.name}</Table.Td>
-                <Table.Td>{getCategoryLabel(service.category)}</Table.Td>
-                <Table.Td>{service.duration} мин</Table.Td>
-                <Table.Td>{String(service.price)} ₽</Table.Td>
-                <Table.Td>
-                  <Flex gap="xs">
-                    <Button
-                      onClick={() => {
-                        openEditModal(service);
-                      }}
-                      variant="subtle"
-                      size="xs"
-                    >
-                      <IconEdit size={16} />
-                    </Button>
-                    <Button
-                      onClick={() => handleDelete(service.id)}
-                      variant="subtle"
-                      color="red"
-                      size="xs"
-                    >
-                      <IconTrash size={16} />
-                    </Button>
-                  </Flex>
-                </Table.Td>
+        <Table.ScrollContainer minWidth={500}>
+          <Table striped highlightOnHover withTableBorder>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Название</Table.Th>
+                <Table.Th>Категория</Table.Th>
+                <Table.Th>Длительность</Table.Th>
+                <Table.Th>Цена</Table.Th>
+                <Table.Th>Действия</Table.Th>
               </Table.Tr>
-            ))}
-          </Table.Tbody>
-        </Table>
+            </Table.Thead>
+            <Table.Tbody>
+              {servicesList.data.map((service) => (
+                <Table.Tr key={service.id}>
+                  <Table.Td>{service.name}</Table.Td>
+                  <Table.Td>{getCategoryLabel(service.category)}</Table.Td>
+                  <Table.Td>{service.duration} мин</Table.Td>
+                  <Table.Td>{String(service.price)} ₽</Table.Td>
+                  <Table.Td>
+                    <Flex gap="xs">
+                      <Button
+                        onClick={() => {
+                          openEditModal(service);
+                        }}
+                        variant="subtle"
+                        size="xs"
+                      >
+                        <IconEdit size={16} />
+                      </Button>
+                      <Button
+                        onClick={() => handleDelete(service.id)}
+                        variant="subtle"
+                        color="red"
+                        size="xs"
+                      >
+                        <IconTrash size={16} />
+                      </Button>
+                    </Flex>
+                  </Table.Td>
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+          </Table>
+        </Table.ScrollContainer>
       </Stack>
       <CreateServiceModalContainer />
       <EditServiceModalContainer />

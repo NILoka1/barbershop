@@ -15,7 +15,7 @@ import UpdateWorkersModal from "./UpdateWorkersModal";
 import { useModalStore } from "../../stores/workerModalStore";
 
 const WorkersPage = () => {
-  const { workersList, isLoading, error,handleDelete } = useWorkers();
+  const { workersList, isLoading, error, handleDelete } = useWorkers();
   const openEditModal = useModalStore((state) => state.openEditWorkerModal);
   const openCreateModal = useModalStore((state) => state.openCreateWorkerModal);
 
@@ -45,47 +45,55 @@ const WorkersPage = () => {
   }
   return (
     <>
-      <Stack>
-        <Flex justify="space-between" align="center">
+      <Stack w={"100%"}>
+        <Flex justify="space-between" w={"100%"} align="center">
           <Title order={2}>Мастера</Title>
           <Button onClick={openCreateModal}>Добавить мастера</Button>
         </Flex>
-
-        <Table striped highlightOnHover withTableBorder>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Имя</Table.Th>
-              <Table.Th>Почта</Table.Th>
-              <Table.Th>Телефон</Table.Th>
-              <Table.Th>Администрация</Table.Th>
-              <Table.Th>Действия</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {workersList.data?.map((worker) => (
-              <Table.Tr key={worker.id}>
-                <Table.Td>{worker.name}</Table.Td>
-                <Table.Td>{worker.email}</Table.Td>
-                <Table.Td>{worker.phone}</Table.Td>
-                <Table.Td>{worker.isAdmin ? "Да" : "Нет"}</Table.Td>
-                <Table.Td>
-                  <Flex gap="xs">
-                    <Button
-                      onClick={() => openEditModal(worker)}
-                      variant="subtle"
-                      size="xs"
-                    >
-                      <IconEdit size={16} />
-                    </Button>
-                    <Button onClick={()=>{handleDelete(worker.id)}} variant="subtle" color="red" size="xs">
-                      <IconTrash size={16} />
-                    </Button>
-                  </Flex>
-                </Table.Td>
+        <Table.ScrollContainer minWidth={500}>
+          <Table striped highlightOnHover withTableBorder>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Имя</Table.Th>
+                <Table.Th>Почта</Table.Th>
+                <Table.Th>Телефон</Table.Th>
+                <Table.Th>Администрация</Table.Th>
+                <Table.Th>Действия</Table.Th>
               </Table.Tr>
-            ))}
-          </Table.Tbody>
-        </Table>
+            </Table.Thead>
+            <Table.Tbody>
+              {workersList.data?.map((worker) => (
+                <Table.Tr key={worker.id}>
+                  <Table.Td>{worker.name}</Table.Td>
+                  <Table.Td>{worker.email}</Table.Td>
+                  <Table.Td>{worker.phone}</Table.Td>
+                  <Table.Td>{worker.isAdmin ? "Да" : "Нет"}</Table.Td>
+                  <Table.Td>
+                    <Flex gap="xs">
+                      <Button
+                        onClick={() => openEditModal(worker)}
+                        variant="subtle"
+                        size="xs"
+                      >
+                        <IconEdit size={16} />
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          handleDelete(worker.id);
+                        }}
+                        variant="subtle"
+                        color="red"
+                        size="xs"
+                      >
+                        <IconTrash size={16} />
+                      </Button>
+                    </Flex>
+                  </Table.Td>
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+          </Table>
+        </Table.ScrollContainer>
       </Stack>
       <AddWorkersModal />
       <UpdateWorkersModal />
