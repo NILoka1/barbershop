@@ -10,17 +10,17 @@ export const addServiceSchema = z.object({
   category: ServiceCategory,
   duration: z.number().min(5, "Минимум 5 минут"),
   price: z.number().min(0, "Цена не может быть отрицательной"),
-  description: z.string().optional(),
+  description: z.string().nullable(),
 });
 
 export const updateServiceSchema = z.object({
   id: z.string(),
-  name: z.string().min(1).optional(),
-  category: z.enum(["SALON", "MANICURE", "COSMETICS"]).optional(),
-  duration: z.number().min(5).optional(),
+  name: z.string().min(1),
+  category: z.enum(["SALON", "MANICURE", "COSMETICS"]).nullable(),
+  duration: z.number().min(5),
   price: z.number().int().min(0, "Цена не может быть отрицательной"),
-  description: z.string().optional(),
-  color: z.string().optional(),
+  description: z.string().nullable(),
+  color: z.string().nullable(),
 });
 
 export type AddServiceInput = z.infer<typeof addServiceSchema>;

@@ -10,22 +10,19 @@ import {
 } from "@mantine/core";
 import { IconAlertCircle, IconEdit, IconTrash } from "@tabler/icons-react";
 import useServices from "./useServices";
-import { getCategoryLabel} from "shared";
-import { ServiceModal } from "./ServiceModal";
+import { getCategoryLabel } from "shared";
+import { useModalStore } from "../../stores/workerModalStore";
+import { EditServiceModalContainer } from "./modals/EditModalContainer";
+import { CreateServiceModalContainer } from "./modals/CreateModalContainer";
 const ServicesPage = () => {
-  const {
-    servicesList,
-    isLoading,
-    error,
-    opened,
-    handleCreate,
-    handleUpdate,
-    handleSubmit,
-    handleDelete,
-    close,
-    editingService
-  } = useServices();
+  const { servicesList, isLoading, error, handleDelete } = useServices();
+  const openEditModal = useModalStore((state) => state.openEditServiceModal);
+  const openCreateModal = useModalStore(
+    (state) => state.openCreateServiceModal,
+  );
 
+  console.log("📄 ServicesPage render");
+  console.trace("Кто вызвал ререндер?");
 
   if (isLoading) {
     return (
@@ -47,7 +44,13 @@ const ServicesPage = () => {
     return (
       <Stack>
         <Text>Ещё нет ни одной услуги</Text>
-        <Button onClick={handleCreate}>Добавить услугу</Button>
+        <Button
+          onClick={() => {
+            openCreateModal();
+          }}
+        >
+          Добавить услугу
+        </Button>
       </Stack>
     );
   }
@@ -57,7 +60,13 @@ const ServicesPage = () => {
       <Stack>
         <Flex justify="space-between" align="center">
           <Title order={2}>Услуги</Title>
-          <Button onClick={handleCreate}>Добавить услугу</Button>
+          <Button
+            onClick={() => {
+              openCreateModal();
+            }}
+          >
+            Добавить услугу
+          </Button>
         </Flex>
 
         <Table striped highlightOnHover withTableBorder>
@@ -81,14 +90,19 @@ const ServicesPage = () => {
                   <Flex gap="xs">
                     <Button
                       onClick={() => {
-                        handleUpdate(service);
+                        openEditModal(service);
                       }}
                       variant="subtle"
                       size="xs"
                     >
                       <IconEdit size={16} />
                     </Button>
-                    <Button onClick={() => handleDelete(service.id)} variant="subtle" color="red" size="xs">
+                    <Button
+                      onClick={() => handleDelete(service.id)}
+                      variant="subtle"
+                      color="red"
+                      size="xs"
+                    >
                       <IconTrash size={16} />
                     </Button>
                   </Flex>
@@ -98,7 +112,8 @@ const ServicesPage = () => {
           </Table.Tbody>
         </Table>
       </Stack>
-      <ServiceModal service={editingService} opened={opened} onClose={close} onSubmit={handleSubmit} />
+      <CreateServiceModalContainer />
+      <EditServiceModalContainer />
     </>
   );
 };

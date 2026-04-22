@@ -1,37 +1,31 @@
-// src/components/ServiceModal/ServiceModal.tsx
+// src/components/CreateServiceModal/CreateServiceModal.tsx
 import {
   Modal,
   TextInput,
-  NumberInput,
-  Select,
   Button,
   Stack,
   Flex,
+  SegmentedControl,
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import {
   addServiceSchema,
   type AddServiceInput,
   categoryOptions,
-  type UpdateServiceInput,
 } from "shared";
-import { useEffect } from "react";
+import { useCreateServices } from "src/api/services/create";
 
-interface ServiceModalProps {
+interface CreateServiceModalProps {
   opened: boolean;
   onClose: () => void;
-  service?: UpdateServiceInput | null;
-  onSubmit: (values: AddServiceInput & { id?: string }) => void;
-  isLoading?: boolean;
 }
 
-export function ServiceModal({
+export function CreateServiceModal({
   opened,
   onClose,
-  service,
-  onSubmit,
-  isLoading,
-}: ServiceModalProps) {
+}: CreateServiceModalProps) {
+  const CreateServices = useCreateServices();
+
   const form = useForm<AddServiceInput>({
     initialValues: {
       name: "",
@@ -43,32 +37,14 @@ export function ServiceModal({
     validate: zodResolver(addServiceSchema),
   });
 
-
-  useEffect(() => {
-    if (service) {
-      form.setValues({
-        name: service.name,
-        category: service.category as AddServiceInput["category"],
-        duration: service.duration,
-        price: Number(service.price),
-        description: service.description || "",
-      });
-    } else {
-      form.reset();
-    }
-  }, [service]);
-
-  const handleSubmit = (values: typeof form.values) => {
-    onSubmit({ ...values, id: service?.id });
+  const handleSubmit = (values: AddServiceInput) => {
+    CreateServices.mutate(values);
+    onClose();
+    form.reset();
   };
 
   return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      title={service ? "Редактировать услугу" : "Новая услуга"}
-      centered
-    >
+    <Modal opened={opened} onClose={onClose} title="Новая услуга" centered>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
           <TextInput
@@ -76,40 +52,30 @@ export function ServiceModal({
             placeholder="Мужская стрижка"
             {...form.getInputProps("name")}
           />
-
-          <Select
-            label="Категория"
+          <SegmentedControl
             data={categoryOptions}
             {...form.getInputProps("category")}
           />
-
-          <NumberInput
+          <TextInput
+            type="number"
             label="Длительность (мин)"
-            min={5}
-            max={180}
             {...form.getInputProps("duration")}
           />
-
-          <NumberInput
+          <TextInput
+            type="number"
             label="Цена (₽)"
-            min={0}
-            decimalScale={0}
             {...form.getInputProps("price")}
           />
-
           <TextInput
             label="Описание"
             placeholder="Описание услуги"
             {...form.getInputProps("description")}
           />
-
           <Flex gap="md" justify="flex-end">
             <Button variant="subtle" onClick={onClose}>
               Отмена
             </Button>
-            <Button type="submit" loading={isLoading}>
-              {service ? "Сохранить" : "Создать"}
-            </Button>
+            <Button type="submit">Создать</Button>
           </Flex>
         </Stack>
       </form>

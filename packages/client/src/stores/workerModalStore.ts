@@ -1,6 +1,6 @@
 // src/stores/modalStore.ts
 import { create } from "zustand";
-import type { workersUpdateInput } from "shared";
+import type { UpdateServiceInput, workersUpdateInput } from "shared";
 
 interface ModalStore {
   editingWorker: workersUpdateInput | null;
@@ -11,6 +11,16 @@ interface ModalStore {
   isCreateWorkerOpened: boolean;
   openCreateWorkerModal: () => void;
   closeCreateWorkerModal: () => void;
+
+  isCreateServiceOpened: boolean;
+  openCreateServiceModal: () => void;
+  closeCreateServiceModal: () => void;
+  
+  // Редактирование услуги
+  editingService: UpdateServiceInput | null;
+  isEditServiceOpened: boolean;
+  openEditServiceModal: (service: UpdateServiceInput) => void;
+  closeEditServiceModal: () => void;
 }
 
 export const useModalStore = create<ModalStore>((set) => ({
@@ -21,5 +31,14 @@ export const useModalStore = create<ModalStore>((set) => ({
 
   isCreateWorkerOpened: false,
   openCreateWorkerModal: () => set({isCreateWorkerOpened: true}),
-  closeCreateWorkerModal: () => set({isCreateWorkerOpened: false})
+  closeCreateWorkerModal: () => set({isCreateWorkerOpened: false}),
+
+  isCreateServiceOpened: false,
+  openCreateServiceModal: () => set({ isCreateServiceOpened: true }),
+  closeCreateServiceModal: () => set({ isCreateServiceOpened: false }),
+  
+  editingService: null,
+  isEditServiceOpened: false,
+  openEditServiceModal: (service) => set({ editingService: service, isEditServiceOpened: true }),
+  closeEditServiceModal: () => set({ editingService: null, isEditServiceOpened: false }),
 }));
