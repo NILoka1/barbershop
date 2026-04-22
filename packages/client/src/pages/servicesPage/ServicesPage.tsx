@@ -7,15 +7,29 @@ import {
   Stack,
   Button,
   Text,
+  TextInput,
 } from "@mantine/core";
-import { IconAlertCircle, IconEdit, IconTrash } from "@tabler/icons-react";
+import {
+  IconAlertCircle,
+  IconEdit,
+  IconSearch,
+  IconTrash,
+} from "@tabler/icons-react";
 import useServices from "./useServices";
 import { getCategoryLabel } from "shared";
 import { useModalStore } from "../../stores/workerModalStore";
 import { EditServiceModalContainer } from "./modals/EditModalContainer";
 import { CreateServiceModalContainer } from "./modals/CreateModalContainer";
 const ServicesPage = () => {
-  const { servicesList, isLoading, error, handleDelete } = useServices();
+  const {
+    servicesList,
+    isLoading,
+    error,
+    handleDelete,
+    query,
+    setQuery,
+    filtered,
+  } = useServices();
   const openEditModal = useModalStore((state) => state.openEditServiceModal);
   const openCreateModal = useModalStore(
     (state) => state.openCreateServiceModal,
@@ -37,7 +51,7 @@ const ServicesPage = () => {
     );
   }
 
-  if (!servicesList?.data?.length) {
+  if (!servicesList.data?.length) {
     return (
       <Stack>
         <Text>Ещё нет ни одной услуги</Text>
@@ -57,6 +71,13 @@ const ServicesPage = () => {
       <Stack>
         <Flex justify="space-between" align="center">
           <Title order={2}>Услуги</Title>
+          <TextInput
+            placeholder="Поиск по услугам..."
+            leftSection={<IconSearch size={16} />}
+            value={query}
+            onChange={(e) => setQuery(e.currentTarget.value)}
+            style={{ width: 250 }}
+          />
           <Button
             onClick={() => {
               openCreateModal();
@@ -77,7 +98,7 @@ const ServicesPage = () => {
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
-              {servicesList.data.map((service) => (
+              {filtered.map((service) => (
                 <Table.Tr key={service.id}>
                   <Table.Td>{service.name}</Table.Td>
                   <Table.Td>{getCategoryLabel(service.category)}</Table.Td>
