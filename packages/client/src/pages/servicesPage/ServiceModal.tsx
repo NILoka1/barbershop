@@ -43,7 +43,7 @@ export function ServiceModal({
     validate: zodResolver(addServiceSchema),
   });
 
-  // 👇 Заполняем форму при редактировании
+
   useEffect(() => {
     if (service) {
       form.setValues({
@@ -56,7 +56,7 @@ export function ServiceModal({
     } else {
       form.reset();
     }
-  }, [service, opened, form]);
+  }, [service]);
 
   const handleSubmit = (values: typeof form.values) => {
     onSubmit({ ...values, id: service?.id });
