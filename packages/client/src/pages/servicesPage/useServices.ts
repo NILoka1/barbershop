@@ -14,14 +14,6 @@ const useServices = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("🔄 servicesList.data изменился");
-  }, [servicesList.data]);
-
-  useEffect(() => {
-    console.log("🔄 servicesList.isLoading изменился:", servicesList.isLoading);
-  }, [servicesList.isLoading]);
-
   return {
     servicesList,
     isLoading: servicesList.isLoading,

@@ -21,9 +21,6 @@ const ServicesPage = () => {
     (state) => state.openCreateServiceModal,
   );
 
-  console.log("📄 ServicesPage render");
-  console.trace("Кто вызвал ререндер?");
-
   if (isLoading) {
     return (
       <Flex justify="center" align="center" h={200}>
