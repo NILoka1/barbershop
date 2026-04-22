@@ -15,7 +15,7 @@ import UpdateWorkersModal from "./UpdateWorkersModal";
 import { useModalStore } from "../../stores/workerModalStore";
 
 const WorkersPage = () => {
-  const { workersList, isLoading, error } = useWorkers();
+  const { workersList, isLoading, error,handleDelete } = useWorkers();
   const openEditModal = useModalStore((state) => state.openEditWorkerModal);
   const openCreateModal = useModalStore((state) => state.openCreateWorkerModal);
 
@@ -77,7 +77,7 @@ const WorkersPage = () => {
                     >
                       <IconEdit size={16} />
                     </Button>
-                    <Button variant="subtle" color="red" size="xs">
+                    <Button onClick={()=>{handleDelete(worker.id)}} variant="subtle" color="red" size="xs">
                       <IconTrash size={16} />
                     </Button>
                   </Flex>

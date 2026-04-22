@@ -1,19 +1,18 @@
 import { trpc } from "../../main";
 import { useDeleteServices } from "../../api/services/delete";
-import { useEffect } from "react";
+import { confirmModal } from "src/utils/confirmModals";
 
 const useServices = () => {
-  const servicesList = trpc.services.getAll.useQuery(undefined, {
-    refetchOnWindowFocus: false,
-  });
+  const servicesList = trpc.services.getAll.useQuery();
 
   const deleteService = useDeleteServices();
   const handleDelete = async (id: string) => {
-    if (confirm("Удалить услугу? ")) {
-      deleteService.mutate({ id: id });
-    }
+    confirmModal("Вы действительно хотите удалить эту услугу?", () => deleteService.mutate({ id: id }));
   };
 
+
+ 
+  
   return {
     servicesList,
     isLoading: servicesList.isLoading,

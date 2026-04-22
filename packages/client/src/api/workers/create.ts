@@ -25,7 +25,7 @@ export function useCreateWorkers() {
       utils.workers.getAll.setData(undefined, context?.previousServices);
     },
     onSettled: () => {
-      utils.services.getAll.invalidate();
+      utils.workers.getAll.invalidate();
     },
   });
 }

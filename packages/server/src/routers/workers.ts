@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { adminProcedure, protectedProcedure, router } from "../trpc";
 import { workersRegistrate, workersUpdate } from "shared";
 import bcrypt from "bcryptjs";
+import z from "zod";
 export const workersRouter = router({
   getAll: protectedProcedure.query(async ({ ctx }) => {
     return ctx.prisma.worker.findMany({
@@ -50,6 +51,13 @@ export const workersRouter = router({
       return ctx.prisma.worker.update({
         where: { id },
         data,
+      });
+    }),
+  delete: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.worker.delete({
+        where: { id: input.id },
       });
     }),
 });
