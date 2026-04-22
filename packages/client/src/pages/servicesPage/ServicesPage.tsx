@@ -95,7 +95,7 @@ const ServicesPage = () => {
                       <IconEdit size={16} />
                     </Button>
                     <Button
-                      onClick={() => handleDelete(service.id, <Text>Вы действительно хотите удалить услугу <b>{service.name}</b>?</Text>)}
+                      onClick={() => handleDelete(service.id)}
                       variant="subtle"
                       color="red"
                       size="xs"

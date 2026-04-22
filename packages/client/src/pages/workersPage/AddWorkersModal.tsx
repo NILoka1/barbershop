@@ -10,9 +10,17 @@ const AddWorkersModal = () => {
   const CreateWorkers = useCreateWorkers();
 
   const handleCreate = (values: workersRegistrateInput) => {
-    closeCreateWorkerModal()
-    CreateWorkers.mutate(values);
+    CreateWorkers.mutate(values, {
+      onSuccess: () => {
+        closeCreateWorkerModal();
+        form.reset();
+      },
+      onError: (error) => {
+        form.setErrors({ email: error.message });
+      },
+    });
   };
+
   const form = useForm<workersRegistrateInput>({
     initialValues: {
       name: "",
@@ -24,7 +32,6 @@ const AddWorkersModal = () => {
   });
 
   if (!isCreateWorkerOpened) return null;
-
 
   return (
     <Modal

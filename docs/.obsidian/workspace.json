@@ -11,10 +11,14 @@
             "id": "1a8820a4c21a26fb",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "todo.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "Новая вкладка"
+              "title": "todo"
             }
           }
         ]
@@ -181,15 +185,16 @@
   },
   "active": "1a8820a4c21a26fb",
   "lastOpenFiles": [
+    "Баги/Мерцания для удалении.md",
+    "Баги/Вечный ререндер модалок.md",
+    "zustand/Принцип оптимизации модалок.md",
+    "Баги.md",
     "Оптимизация.md",
     "todo.md",
-    "Баги/Вечный ререндер модалок.md",
     "Архитектура.md",
-    "Баги.md",
     "00-Главная.md",
     "Метрики.md",
     "Глоссарий.md",
-    "zustand/Принцип оптимизации модалок.md",
     "Баги",
     "zustand",
     "erd.svg.md",
