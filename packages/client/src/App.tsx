@@ -14,11 +14,18 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
 
         <Route element={<ProtectedRoute />}>
-        <Route element={<AppSh><Outlet /></AppSh>}>
-          <Route path="/workerDashbord" element={<WorkerDashbord />} />
-          <Route path="/services" element={<ServicesPage/>}></Route>
-          <Route path="/workers" element={<WorkersPage/>}/>
-        </Route>
+          <Route
+            element={
+              <AppSh>
+                <Outlet />
+              </AppSh>
+            }
+          >
+            <Route path="/workerDashbord" element={<WorkerDashbord />} />
+            <Route path="/services" element={<ServicesPage />}></Route>
+            <Route path="/workers" element={<WorkersPage />} />
+            <Route path="*" element={<h1>404 Not Found</h1>} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
