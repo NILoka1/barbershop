@@ -3,28 +3,26 @@ import { useMemo, useState } from "react";
 import type { ShiftFromDB } from "shared";
 import { trpc } from "src/main";
 
-
 export const useShiftsPage = () => {
   const [selected, setSelected] = useState<Date | null>(new Date());
-
-
-  const { data: shifts } = trpc.shifts.getInDateRange.useQuery({
-    startDate: dayjs(selected).startOf("month").toISOString(),
-    endDate: dayjs(selected).endOf("month").toISOString(),
-  });
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date()); // 👈 НОВОЕ
 
   const handleDateChange = (date: string) => {
-    setSelected(dayjs(date).toDate());
+    setCurrentMonth(dayjs(date).toDate()); // 👈 меняем месяц для запроса
   };
+
+  const { data: shifts } = trpc.shifts.getInDateRange.useQuery({
+    startDate: dayjs(currentMonth).startOf("month").toISOString(), // 👈 currentMonth
+    endDate: dayjs(currentMonth).endOf("month").toISOString(),
+  });
 
   const dayDetail: ShiftFromDB[] = useMemo(() => {
     if (!shifts || !selected) return [];
-    
+
     return shifts.filter((shift) =>
-      dayjs(shift.startTime).isSame(selected, 'day')
+      dayjs(shift.startTime).isSame(selected, "day"),
     );
   }, [shifts, selected]);
 
-
-  return { selected, dayDetail, handleDateChange };
+  return { selected, currentMonth, handleDateChange, dayDetail, setSelected };
 };
