@@ -1,5 +1,5 @@
 import { Button, Flex, Modal, Stack, TextInput } from "@mantine/core";
-import { useForm, zodResolver } from "@mantine/form";
+import { useForm, schemaResolver } from "@mantine/form";
 import { workersRegistrate, type workersRegistrateInput } from "shared";
 import { useModalStore } from "../../stores/workerModalStore";
 import { useCreateWorkers } from "../../api/workers/create";
@@ -28,7 +28,7 @@ const AddWorkersModal = () => {
       password: "",
       phone: "",
     },
-    validate: zodResolver(workersRegistrate),
+    validate: schemaResolver(workersRegistrate),
   });
 
   if (!isCreateWorkerOpened) return null;

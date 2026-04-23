@@ -7,7 +7,7 @@ import {
   Flex,
   SegmentedControl,
 } from "@mantine/core";
-import { useForm, zodResolver } from "@mantine/form";
+import { useForm, schemaResolver } from "@mantine/form";
 import {
   addServiceSchema,
   type AddServiceInput,
@@ -34,7 +34,7 @@ export function CreateServiceModal({
       price: 0,
       description: "",
     },
-    validate: zodResolver(addServiceSchema),
+    validate: schemaResolver(addServiceSchema),
   });
 
   const handleSubmit = (values: AddServiceInput) => {

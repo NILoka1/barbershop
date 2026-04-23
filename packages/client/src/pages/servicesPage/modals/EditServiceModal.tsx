@@ -7,7 +7,7 @@ import {
   Stack,
   Flex,
 } from "@mantine/core";
-import { useForm, zodResolver } from "@mantine/form";
+import { useForm, schemaResolver } from "@mantine/form";
 import { categoryOptions, updateServiceSchema, type UpdateServiceInput } from "shared";
 import { useUpdateServices } from "src/api/services/update";
 
@@ -26,7 +26,7 @@ export function EditServiceModal({
 
   const form = useForm<UpdateServiceInput>({
     initialValues: service,
-    validate: zodResolver(updateServiceSchema),
+    validate: schemaResolver(updateServiceSchema),
   });
 
   const handleSubmit = (values: UpdateServiceInput) => {

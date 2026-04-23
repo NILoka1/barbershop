@@ -1,4 +1,4 @@
-import { useForm, zodResolver } from "@mantine/form";
+import { useForm,schemaResolver } from "@mantine/form";
 import { loginSchema } from "shared";
 import { useLoginMutation } from "../../api/auth/login";
 
@@ -10,7 +10,7 @@ export const useLogin = () => {
       email: "",
       password: "",
     },
-    validate: zodResolver(loginSchema),
+    validate: schemaResolver(loginSchema, {sync: true}),
     validateInputOnBlur: true,
   });
 

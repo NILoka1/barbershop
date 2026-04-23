@@ -1,5 +1,5 @@
 import { Button, Checkbox, Flex, Modal, Stack, TextInput } from "@mantine/core";
-import { useForm, zodResolver } from "@mantine/form";
+import { useForm, schemaResolver } from "@mantine/form";
 import { workersUpdate, type workersUpdateInput } from "shared";
 import { useModalStore } from "../../stores/workerModalStore";
 import { useUpdateWorker } from "../../api/workers/update";
@@ -23,7 +23,7 @@ const UpdateWorkersModal = () => {
       phone: "",
       isAdmin: false,
     },
-    validate: zodResolver(workersUpdate),
+    validate: schemaResolver(workersUpdate),
   });
 
   useEffect(() => {
