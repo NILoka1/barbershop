@@ -10,8 +10,13 @@
     "rootDir": "./src",
     "declaration": false,
     "composite": false,
-    "types": ["node"]
+    "types": ["node"],
+    "paths": {
+      "server": ["../server/src"],
+      "server/*": ["../server/src/*"],
+    }
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist"],
+  "references": [{ "path": "../server" }]
 }

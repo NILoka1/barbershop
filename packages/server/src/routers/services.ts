@@ -4,7 +4,7 @@ import { z } from "zod";
 
 export const servicesRouter = router({
   // Получить все услуги
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  getAll: publicProcedure.input(z.object({})).query(async ({ ctx }) => {
     return ctx.prisma.service.findMany({
       orderBy: { name: "asc" },
     });

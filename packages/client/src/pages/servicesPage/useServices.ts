@@ -5,7 +5,7 @@ import { useSearch } from "src/utils/useSearch";
 import { filterServices } from "src/utils/searchers/filterServices";
 
 const useServices = () => {
-  const servicesList = trpc.services.getAll.useQuery();
+  const servicesList = trpc.services.getAll.useQuery({});
 
   const deleteService = useDeleteServices();
   const handleDelete = async (id: string) => {
