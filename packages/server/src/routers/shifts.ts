@@ -1,5 +1,5 @@
 import { protectedProcedure, router } from "../trpc";
-import { shiftsInDate } from "shared";
+import { addShift, shiftsInDate } from "shared";
 
 export const shiftsRouter = router({
   getInDateRange: protectedProcedure
@@ -29,4 +29,15 @@ export const shiftsRouter = router({
         orderBy: { startTime: "asc" },
       });
     }),
+    createShift: protectedProcedure.input(addShift).mutation(async ({ ctx, input }) => {
+      const { startDate, endDate, worker } = input;
+
+      return ctx.prisma.shift.create({
+        data: {
+          startTime: new Date(startDate),
+          endTime: new Date(endDate),
+          workerId: worker,
+        },
+      });
+    })
 });

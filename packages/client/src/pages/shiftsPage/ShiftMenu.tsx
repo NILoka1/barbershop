@@ -1,6 +1,6 @@
 import { Paper, Tabs, Button, Text, Flex } from "@mantine/core";
 import dayjs from "dayjs";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import type { ShiftFromDB } from "shared";
 
 import { IconClock, IconCalendar } from "@tabler/icons-react";
