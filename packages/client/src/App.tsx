@@ -6,6 +6,7 @@ import WorkerDashbord from "./pages/workerDashbord/WorkerDashbord";
 import { AppSh } from "./components/AppShell";
 import ServicesPage from "./pages/servicesPage/ServicesPage";
 import WorkersPage from "./pages/workersPage/WorkersPage";
+import {ShiftsPage} from "./pages/shiftsPage/ShiftsPage";
 function App() {
   return (
     <BrowserRouter>
@@ -24,6 +25,7 @@ function App() {
             <Route path="/workerDashbord" element={<WorkerDashbord />} />
             <Route path="/services" element={<ServicesPage />}></Route>
             <Route path="/workers" element={<WorkersPage />} />
+            <Route path="/shifts" element={<ShiftsPage/>} />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>
         </Route>

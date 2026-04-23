@@ -16,13 +16,13 @@ interface NavItem {
 export const AppSh = ({ children }: AppShProps) => {
   const [opened, { toggle }] = useDisclosure();
   const location = useLocation();
-  
+
   const navList: NavItem[] = [
-    { name: 'Главная', link: '/workerDashbord' },
-    { name: 'Услуги', link: '/services' },
-    { name: 'Смены', link: '/shifts' },
-    { name: 'Записи', link: '/bookings' },
-    { name: 'Мастера', link: '/workers' },
+    { name: "Главная", link: "/workerDashbord" },
+    { name: "Услуги", link: "/services" },
+    { name: "Смены", link: "/shifts" },
+    { name: "Записи", link: "/bookings" },
+    { name: "Мастера", link: "/workers" },
   ];
 
   return (
@@ -55,14 +55,23 @@ export const AppSh = ({ children }: AppShProps) => {
               />
             ))}
           </Flex>
-          
+
           <Flex>
             <ThemeToggle />
           </Flex>
         </Flex>
       </AppShell.Navbar>
 
-      <AppShell.Main>{children}</AppShell.Main>
+      <AppShell.Main
+        styles={{
+          main: {
+            height: "calc(100dvh - 60px)",
+            overflow: "auto",
+          },
+        }}
+      >
+        {children}
+      </AppShell.Main>
     </AppShell>
   );
 };

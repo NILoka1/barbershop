@@ -13,7 +13,7 @@ export function ThemeToggle() {
       onClick={toggleColorScheme}
       title="Переключить тему"
     >
-      {dark ? <IconSun size={''} /> : <IconMoon size={18} />}
+      {dark ? <IconSun size={18} /> : <IconMoon size={18} />}
     </ActionIcon>
   );
 }
