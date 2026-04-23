@@ -14,7 +14,7 @@ export const trpcClient = trpc.createClient({
         const token = localStorage.getItem('token');
         return token ? { Authorization: `Bearer ${token}` } : {};
       },
+      transformer: superjson,
     }),
   ],
-  transformer: superjson,
 });

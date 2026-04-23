@@ -7,7 +7,6 @@ import type { AppRouter } from "server";
 import App from "./App";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css"
-import "./index.css"
 import { trpcClient } from "./api/client";
 import { ModalsProvider } from "@mantine/modals";
 export const trpc = createTRPCReact<AppRouter>();

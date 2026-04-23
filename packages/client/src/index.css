@@ -1,7 +1,0 @@
-/* packages/client/src/index.css */
-
-/* ТОЛЬКО это — больше ничего для календаря */
-.mantine-Calendar-levelsGroup {
-  height: 100%;
-  width: 100%;
-}

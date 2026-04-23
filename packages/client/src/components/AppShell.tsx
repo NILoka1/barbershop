@@ -31,7 +31,7 @@ export const AppSh = ({ children }: AppShProps) => {
       padding="md"
       header={{ height: 60 }}
       navbar={{
-        width: 300,
+        width: 150,
         breakpoint: "sm",
         collapsed: { mobile: !opened },
       }}
