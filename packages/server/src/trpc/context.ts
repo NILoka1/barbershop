@@ -1,5 +1,4 @@
-import { inferAsyncReturnType } from '@trpc/server';
-import { CreateExpressContextOptions } from '@trpc/server/adapters/express';
+import { type CreateExpressContextOptions } from '@trpc/server/adapters/express';
 import { prisma } from '../db/prisma';
 import { verifyToken } from '../utils/jwt';
 
@@ -20,4 +19,4 @@ export async function createContext({ req, res }: CreateExpressContextOptions) {
   return { req, res, prisma, worker };
 }
 
-export type Context = inferAsyncReturnType<typeof createContext>;
+export type Context = Awaited<ReturnType<typeof createContext>>;

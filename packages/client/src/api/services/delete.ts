@@ -7,7 +7,7 @@ export function useDeleteServices() {
       await utils.services.getAll.cancel();
       const previousServices = utils.services.getAll.getData();
 
-      utils.services.getAll.setData(undefined, (old) => {
+      utils.services.getAll.setData({}, (old) => {
         if (!old) return old;
         return old.filter((s) => s.id !== deletedId);
       });
@@ -15,7 +15,7 @@ export function useDeleteServices() {
       return { previousServices };
     },
     onError: (err, deletedId, context) => {
-      utils.services.getAll.setData(undefined, context?.previousServices);
+      utils.services.getAll.setData({}, context?.previousServices);
     },
     onSettled: () => {
       utils.services.getAll.invalidate();

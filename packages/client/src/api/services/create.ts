@@ -15,7 +15,7 @@ export function useCreateServices() {
         description: newService.description ?? null,
       };
 
-      utils.services.getAll.setData(undefined, (old) => {
+      utils.services.getAll.setData({}, (old) => {
         if (!old) return [tempService];
         return [...old, tempService];
       });
@@ -23,7 +23,7 @@ export function useCreateServices() {
       return { previousServices };
     },
     onError: (err, updatedService, context) => {
-      utils.services.getAll.setData(undefined, context?.previousServices);
+      utils.services.getAll.setData({}, context?.previousServices);
     },
     onSettled: () => {
       utils.services.getAll.invalidate();

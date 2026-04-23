@@ -24,7 +24,7 @@ export function useCreateShift() {
       };
       
       utils.shifts.getInDateRange.setData(
-        { startDate: '', endDate: '' },  // 👈 нужно передать реальные даты
+        { startDate: '', endDate: '' },
         (old) => old ? [...old, tempShift] : [tempShift]
       );
       

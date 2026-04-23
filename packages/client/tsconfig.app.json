@@ -23,6 +23,7 @@
 
     /* Paths для монорепозитория */
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "paths": {
       "server": ["../server/src"],
       "server/*": ["../server/src/*"],
@@ -30,9 +31,5 @@
       "shared/*": ["../shared/src/*"]
     }
   },
-  "include": ["src"],
-  "references": [
-    { "path": "../server/tsconfig.json" },
-    { "path": "../shared/tsconfig.json" }
-  ]
+  "include": ["src"]
 }

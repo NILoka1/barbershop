@@ -28,18 +28,20 @@ export const servicesRouter = router({
       });
     }),
 
-  // Обновить услугу (только админ)
   update: adminProcedure
     .input(updateServiceSchema)
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
+
+      const cleanData = Object.fromEntries(
+        Object.entries(data).map(([key, value]) => [key, value ?? undefined]),
+      );
+
       return ctx.prisma.service.update({
         where: { id },
-        data,
+        data: cleanData,
       });
     }),
-
-  // Удалить услугу (только админ)
   delete: adminProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {

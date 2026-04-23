@@ -14,7 +14,7 @@ export const CreateShiftModal = ({ date }: { date: string }) => {
   const { isCreateShiftOpened, closeCreateShiftModal } = useModalStore();
   const createShift = useCreateShift();
 
-  const { data: workers } = trpc.workers.getAll.useQuery({});
+  const { data: workers } = trpc.workers.getAll.useQuery();
 
   const form = useForm({
     initialValues: {
@@ -89,7 +89,7 @@ export const CreateShiftModal = ({ date }: { date: string }) => {
           <Button
             onClick={Loging}
             type="submit"
-            loading={createShift.isLoading}
+            loading={createShift.isPending}
           >
             Добавить смену
           </Button>

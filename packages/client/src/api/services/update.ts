@@ -7,23 +7,27 @@ export function useUpdateServices() {
   const utils = trpc.useUtils();
   return trpc.services.update.useMutation({
     onMutate: async (updatedService: UpdateServiceInput) => {
-      await utils.services.getAll.cancel();
+  await utils.services.getAll.cancel();
+  const previousServices = utils.services.getAll.getData();
 
-      const previousServices = utils.services.getAll.getData();
+  utils.services.getAll.setData({}, (old) => {
+    if (!old) return old;
+    return old.map((s) =>
+      s.id === updatedService.id
+        ? {
+            ...s,
+            ...updatedService,
+            price: updatedService.price ?? s.price,
+            category: updatedService.category ?? s.category, // 👈 null → старое значение
+          }
+        : s,
+    );
+  });
 
-      utils.services.getAll.setData(undefined, (old) => {
-        if (!old) return old;
-        return old.map((s) =>
-          s.id === updatedService.id
-            ? { ...s, ...updatedService, price: updatedService.price ?? s.price }
-            : s,
-        );
-      });
-
-      return { previousServices };
-    },
+  return { previousServices };
+},
     onError: (err, updatedService, context) => {
-      utils.services.getAll.setData(undefined, context?.previousServices);
+      utils.services.getAll.setData({}, context?.previousServices);
     },
     onSettled: () => {
       utils.services.getAll.invalidate();
