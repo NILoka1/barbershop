@@ -20,6 +20,7 @@ import { getCategoryLabel } from "shared";
 import { useModalStore } from "../../stores/workerModalStore";
 import { EditServiceModalContainer } from "./modals/EditModalContainer";
 import { CreateServiceModalContainer } from "./modals/CreateModalContainer";
+import { useMediaQuery } from "@mantine/hooks";
 const ServicesPage = () => {
   const {
     servicesList,
@@ -34,6 +35,7 @@ const ServicesPage = () => {
   const openCreateModal = useModalStore(
     (state) => state.openCreateServiceModal,
   );
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   if (isLoading) {
     return (
@@ -68,16 +70,20 @@ const ServicesPage = () => {
 
   return (
     <>
-      <Stack>
+      <Stack w={"100%"}>
         <Flex justify="space-between" align="center">
           <Title order={2}>Услуги</Title>
-          <TextInput
-            placeholder="Поиск по услугам..."
-            leftSection={<IconSearch size={16} />}
-            value={query}
-            onChange={(e) => setQuery(e.currentTarget.value)}
-            style={{ width: 250 }}
-          />
+
+          {!isMobile && (
+            <TextInput
+              placeholder="Поиск по услугам..."
+              leftSection={<IconSearch size={16} />}
+              value={query}
+              onChange={(e) => setQuery(e.currentTarget.value)}
+              style={{ width: 250 }}
+            />
+          )}
+
           <Button
             onClick={() => {
               openCreateModal();
@@ -86,6 +92,17 @@ const ServicesPage = () => {
             Добавить услугу
           </Button>
         </Flex>
+        {isMobile && (
+          <TextInput
+            placeholder="Поиск по услугам..."
+            leftSection={<IconSearch size={16} />}
+            value={query}
+            onChange={(e) => setQuery(e.currentTarget.value)}
+            w={"100%"}
+
+          />
+        )}
+
         <Table.ScrollContainer minWidth={500}>
           <Table striped highlightOnHover withTableBorder>
             <Table.Thead>

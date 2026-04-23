@@ -10,10 +10,16 @@ import {
   TextInput,
 } from "@mantine/core";
 import useWorkers from "./useWorkers";
-import { IconAlertCircle, IconEdit, IconSearch, IconTrash } from "@tabler/icons-react";
+import {
+  IconAlertCircle,
+  IconEdit,
+  IconSearch,
+  IconTrash,
+} from "@tabler/icons-react";
 import AddWorkersModal from "./AddWorkersModal";
 import UpdateWorkersModal from "./UpdateWorkersModal";
 import { useModalStore } from "../../stores/workerModalStore";
+import { useMediaQuery } from "@mantine/hooks";
 
 const WorkersPage = () => {
   const {
@@ -27,6 +33,7 @@ const WorkersPage = () => {
   } = useWorkers();
   const openEditModal = useModalStore((state) => state.openEditWorkerModal);
   const openCreateModal = useModalStore((state) => state.openCreateWorkerModal);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   if (isLoading) {
     return (
@@ -55,17 +62,32 @@ const WorkersPage = () => {
   return (
     <>
       <Stack w={"100%"}>
-        <Flex justify="space-between" w={"100%"} align="center">
+        <Flex gap={10} justify="space-between" w={"100%"} align="flex-start">
           <Title order={2}>Мастера</Title>
+
+          {!isMobile && (
+            <TextInput
+              placeholder="Поиск по мастерам..."
+              leftSection={<IconSearch size={16} />}
+              value={query}
+              onChange={(e) => setQuery(e.currentTarget.value)}
+              w={"100%"}
+            />
+          )}
+
+          <Button miw={"35%"} onClick={openCreateModal}>
+            Добавить мастера
+          </Button>
+        </Flex>
+        {isMobile && (
           <TextInput
             placeholder="Поиск по мастерам..."
             leftSection={<IconSearch size={16} />}
             value={query}
             onChange={(e) => setQuery(e.currentTarget.value)}
-            style={{ width: 250 }}
+            w={"100%"}
           />
-          <Button onClick={openCreateModal}>Добавить мастера</Button>
-        </Flex>
+        )}
         <Table.ScrollContainer minWidth={500}>
           <Table striped highlightOnHover withTableBorder>
             <Table.Thead>

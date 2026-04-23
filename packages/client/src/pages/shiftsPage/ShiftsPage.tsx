@@ -9,8 +9,8 @@ export const ShiftsPage = () => {
           <Calendar fullWidth />
         </Flex>
         <Flex w={{ base: "90%", sm: "40%" }}>
-          <Text truncate="end" fw={"90"}>
-            KZKfZfewrfefwefwsedfwefdzfdtryg6fghbujiKZKZKZKZKZK
+          <Text fw={"90"}>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quaerat at dolorum aut consectetur perspiciatis quidem magnam voluptatibus architecto corrupti sunt, esse dolorem doloribus eum earum velit voluptates vero nostrum placeat.
           </Text>
         </Flex>
       </Flex>
