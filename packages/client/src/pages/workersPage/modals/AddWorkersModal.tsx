@@ -1,18 +1,16 @@
 import { Button, Flex, Modal, Stack, TextInput } from "@mantine/core";
 import { useForm, schemaResolver } from "@mantine/form";
 import { workersRegistrate, type workersRegistrateInput } from "shared";
-import { useModalStore } from "../../stores/workerModalStore";
-import { useCreateWorkers } from "../../api/workers/create";
+import { useCreateWorkers } from "src/api/workers/create";
 
-const AddWorkersModal = () => {
-  const { isCreateWorkerOpened, closeCreateWorkerModal } = useModalStore();
+const AddWorkersModal = ({opened, onClose}: {opened: boolean, onClose: () => void}) => {
 
   const CreateWorkers = useCreateWorkers();
 
   const handleCreate = (values: workersRegistrateInput) => {
     CreateWorkers.mutate(values, {
       onSuccess: () => {
-        closeCreateWorkerModal();
+        onClose();
         form.reset();
       },
       onError: (error) => {
@@ -31,12 +29,10 @@ const AddWorkersModal = () => {
     validate: schemaResolver(workersRegistrate),
   });
 
-  if (!isCreateWorkerOpened) return null;
-
   return (
     <Modal
-      opened={isCreateWorkerOpened}
-      onClose={closeCreateWorkerModal}
+      opened={opened}
+      onClose={onClose}
       title={"Добавить работника"}
       centered
     >
@@ -64,7 +60,7 @@ const AddWorkersModal = () => {
           <TextInput label="Телефон" min={0} {...form.getInputProps("phone")} />
 
           <Flex gap="md" justify="flex-end">
-            <Button variant="subtle" onClick={closeCreateWorkerModal}>
+            <Button variant="subtle" onClick={onClose}>
               Отмена
             </Button>
             <Button type="submit">{"Создать"}</Button>

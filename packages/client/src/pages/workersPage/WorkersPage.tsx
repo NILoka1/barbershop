@@ -16,10 +16,10 @@ import {
   IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
-import AddWorkersModal from "./AddWorkersModal";
-import UpdateWorkersModal from "./UpdateWorkersModal";
+import {UpdateWorkersModalContainer} from "./modals/UpdateWorkersModalContainer";
 import { useModalStore } from "../../stores/workerModalStore";
 import { useMediaQuery } from "@mantine/hooks";
+import { CreateServiceModalContainer } from "./modals/AddWorkersModalConteiner";
 
 const WorkersPage = () => {
   const {
@@ -133,8 +133,8 @@ const WorkersPage = () => {
           </Table>
         </Table.ScrollContainer>
       </Stack>
-      <AddWorkersModal />
-      <UpdateWorkersModal />
+      <CreateServiceModalContainer />
+      <UpdateWorkersModalContainer />
     </>
   );
 };

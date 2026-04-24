@@ -1,18 +1,21 @@
 import { Button, Checkbox, Flex, Modal, Stack, TextInput } from "@mantine/core";
 import { useForm, schemaResolver } from "@mantine/form";
 import { workersUpdate, type workersUpdateInput } from "shared";
-import { useModalStore } from "../../stores/workerModalStore";
-import { useUpdateWorker } from "../../api/workers/update";
+import { useUpdateWorker } from "src/api/workers/update";
 import { useEffect } from "react";
 
-const UpdateWorkersModal = () => {
-  const { isEditWorkerOpened, editingWorker, closeEditWorkerModal } =
-    useModalStore();
+interface UpdateWorkersModalProps {
+  opened: boolean;
+  onClose: () => void;
+  editingWorker: workersUpdateInput | null;
+}
+
+const UpdateWorkersModal = ({ opened, onClose, editingWorker }: UpdateWorkersModalProps) => {
 
   const UpdateWorker = useUpdateWorker();
   const handleUpdate = (values: workersUpdateInput) => {
     UpdateWorker.mutate(values);
-    closeEditWorkerModal();
+    onClose();
   };
 
   const form = useForm<workersUpdateInput>({
@@ -32,12 +35,11 @@ const UpdateWorkersModal = () => {
     }
   }, [editingWorker]);
 
-  if (!isEditWorkerOpened || !editingWorker) return null;
 
   return (
     <Modal
-      opened={isEditWorkerOpened}
-      onClose={closeEditWorkerModal}
+      opened={opened}
+      onClose={onClose}
       title={"Изменить работника"}
       centered
     >
@@ -62,10 +64,10 @@ const UpdateWorkersModal = () => {
             {...form.getInputProps("isAdmin", { type: "checkbox" })}
           />
           <Flex gap="md" justify="flex-end">
-            <Button variant="subtle" onClick={closeEditWorkerModal}>
+            <Button variant="subtle" onClick={onClose}>
               Отмена
             </Button>
-            <Button type="submit">{"Создать"}</Button>
+            <Button type="submit">{"Обновить"}</Button>
           </Flex>
         </Stack>
       </form>
