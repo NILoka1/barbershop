@@ -6,6 +6,7 @@ import { useCreateShift } from "src/api/shifts/create";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { useEffect } from "react";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -24,6 +25,10 @@ export const CreateShiftModal = ({ date }: { date: string }) => {
       endTime: "18:00",
     },
   });
+
+  useEffect(() => {
+    form.setFieldValue("startDate", date);
+  }, [date]);
 
   const handleSubmit = (values: typeof form.values) => {
     const dateOnly = values.startDate.split("T")[0];
@@ -45,10 +50,6 @@ export const CreateShiftModal = ({ date }: { date: string }) => {
         },
       },
     );
-  };
-
-  const Loging = () => {
-    console.log(form.values);
   };
 
   const workersData =
@@ -86,11 +87,7 @@ export const CreateShiftModal = ({ date }: { date: string }) => {
             {...form.getInputProps("endTime")}
           />
 
-          <Button
-            onClick={Loging}
-            type="submit"
-            loading={createShift.isPending}
-          >
+          <Button type="submit" loading={createShift.isPending}>
             Добавить смену
           </Button>
         </Stack>

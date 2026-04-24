@@ -4,21 +4,19 @@ import { useState } from "react";
 import type { ShiftFromDB } from "shared";
 import { IconClock, IconCalendar } from "@tabler/icons-react";
 import { useModalStore } from "src/stores/workerModalStore";
-import { CreateShiftModal } from "./CreateShiftModal";
 
 interface ShiftMenuProps {
   dayDatail: ShiftFromDB[];
-  selected: Date | null; // 👈 ДОБАВИТЬ
 }
 
-export const ShiftMenu = ({ dayDatail, selected }: ShiftMenuProps) => {
+export const ShiftMenu = ({ dayDatail}: ShiftMenuProps) => {
   const [activeTab, setActiveTab] = useState<string | null>("shifts");
 
   const openCreateModal = useModalStore((state) => state.openCreateShiftModal);
 
   if (!dayDatail || dayDatail.length === 0) {
     return (
-      <Paper withBorder shadow="sm" p="md">
+      <Paper withBorder shadow="md" w="100%" h="100%" p="md">
         <Text ta="center">Нет данных для выбранного дня</Text>
         <Button mb="sm" w={"100%"} onClick={openCreateModal}>
           Добавить смену
@@ -64,7 +62,6 @@ export const ShiftMenu = ({ dayDatail, selected }: ShiftMenuProps) => {
           </Tabs.Panel>
         </Tabs>
       </Paper>
-      <CreateShiftModal date={dayjs(selected).format("YYYY-MM-DD")} />
     </>
   );
 };

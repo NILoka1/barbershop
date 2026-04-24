@@ -3,6 +3,7 @@ import { Calendar } from "@mantine/dates";
 import dayjs from "dayjs";
 import { useShiftsPage } from "./useShaitsPage";
 import { ShiftMenu } from "./ShiftMenu";
+import { CreateShiftModal } from "./CreateShiftModal";
 
 export const ShiftsPage = () => {
   const { selected, currentMonth, handleDateChange, dayDetail, setSelected } =
@@ -27,9 +28,10 @@ export const ShiftsPage = () => {
           />
         </Flex>
         <Flex w={{ base: "90%", sm: "40%" }} h={"100%"}>
-          <ShiftMenu dayDatail={dayDetail} selected={selected} />
+          <ShiftMenu dayDatail={dayDetail} />
         </Flex>
       </Flex>
+      <CreateShiftModal date={dayjs(selected).format("YYYY-MM-DD")} />
     </>
   );
 };
