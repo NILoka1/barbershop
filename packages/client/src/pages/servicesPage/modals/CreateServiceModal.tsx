@@ -6,6 +6,7 @@ import {
   Stack,
   Flex,
   SegmentedControl,
+  NumberInput,
 } from "@mantine/core";
 import { useForm, schemaResolver } from "@mantine/form";
 import {
@@ -56,14 +57,14 @@ export function CreateServiceModal({
             data={categoryOptions}
             {...form.getInputProps("category")}
           />
-          <TextInput
-            type="number"
+          <NumberInput
             label="Длительность (мин)"
+            hideControls
             {...form.getInputProps("duration")}
           />
-          <TextInput
-            type="number"
+          <NumberInput
             label="Цена (₽)"
+            hideControls
             {...form.getInputProps("price")}
           />
           <TextInput

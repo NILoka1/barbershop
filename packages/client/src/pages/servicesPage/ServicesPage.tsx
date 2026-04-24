@@ -84,13 +84,7 @@ const ServicesPage = () => {
             />
           )}
 
-          <Button
-            onClick={() => {
-              openCreateModal();
-            }}
-          >
-            Добавить услугу
-          </Button>
+          <Button onClick={openCreateModal}>Добавить услугу</Button>
         </Flex>
         {isMobile && (
           <TextInput
@@ -99,7 +93,6 @@ const ServicesPage = () => {
             value={query}
             onChange={(e) => setQuery(e.currentTarget.value)}
             w={"100%"}
-
           />
         )}
 

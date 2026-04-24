@@ -6,9 +6,14 @@ import {
   Button,
   Stack,
   Flex,
+  NumberInput,
 } from "@mantine/core";
 import { useForm, schemaResolver } from "@mantine/form";
-import { categoryOptions, updateServiceSchema, type UpdateServiceInput } from "shared";
+import {
+  categoryOptions,
+  updateServiceSchema,
+  type UpdateServiceInput,
+} from "shared";
 import { useUpdateServices } from "src/api/services/update";
 
 interface EditServiceModalProps {
@@ -50,13 +55,13 @@ export function EditServiceModal({
             {...form.getInputProps("category")}
           />
 
-          <TextInput
-            type="number"
+          <NumberInput
+            hideControls
             label="Длительность (мин)"
             {...form.getInputProps("duration")}
           />
-          <TextInput
-            type="number"
+          <NumberInput
+            hideControls
             label="Цена (₽)"
             {...form.getInputProps("price")}
           />

@@ -71,11 +71,11 @@ const WorkersPage = () => {
               leftSection={<IconSearch size={16} />}
               value={query}
               onChange={(e) => setQuery(e.currentTarget.value)}
-              w={"100%"}
+              style={{ width: 250 }}
             />
           )}
 
-          <Button miw={"35%"} onClick={openCreateModal}>
+          <Button onClick={openCreateModal}>
             Добавить мастера
           </Button>
         </Flex>
