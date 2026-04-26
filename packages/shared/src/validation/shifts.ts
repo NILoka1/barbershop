@@ -10,3 +10,6 @@ export const addShift = z.object({
     endDate: z.string().datetime("Некорректная дата"), 
     worker: z.string()
 })
+export const deleteShift = z.object({
+    id: z.string()
+})

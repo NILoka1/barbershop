@@ -1,5 +1,5 @@
 import { protectedProcedure, router } from "../trpc";
-import { addShift, shiftsInDate } from "shared";
+import { addShift, deleteShift, shiftsInDate } from "shared";
 
 export const shiftsRouter = router({
   getInDateRange: protectedProcedure
@@ -39,5 +39,10 @@ export const shiftsRouter = router({
           workerId: worker,
         },
       });
-    })
+    }),
+    deleteShift: protectedProcedure.input(deleteShift).mutation(async ({ ctx, input }) => {
+      return ctx.prisma.shift.delete({
+        where: { id: input.id },
+      });
+    }),
 });
