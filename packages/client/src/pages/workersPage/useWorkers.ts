@@ -1,5 +1,5 @@
 import { useDeleteWorker } from "src/api/workers/delete";
-import { trpc } from "../..//main";
+import { trpc } from "src/main";
 import { confirmModal } from "src/utils/confirmModals";
 import { useSearch } from "src/utils/useSearch";
 import { filterWorkers } from "src/utils/searchers/filterWorkers";

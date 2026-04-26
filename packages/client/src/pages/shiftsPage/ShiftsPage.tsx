@@ -28,7 +28,7 @@ export const ShiftsPage = () => {
           />
         </Flex>
         <Flex w={{ base: "90%", sm: "40%" }} h={"100%"}>
-          <ShiftMenu dayDatail={dayDetail} />
+          <ShiftMenu dayDatail={dayDetail} currentMonth={currentMonth} />
         </Flex>
       </Flex>
       <CreateShiftModal date={dayjs(selected).format("YYYY-MM-DD")} />
