@@ -1,5 +1,5 @@
 import { protectedProcedure, router } from "../trpc";
-import { addShift, deleteShift, shiftsInDate } from "shared";
+import { addShift, deleteShift, shiftsInDate, shiftsUpdate } from "shared";
 
 export const shiftsRouter = router({
   getInDateRange: protectedProcedure
@@ -22,14 +22,16 @@ export const shiftsRouter = router({
               name: true,
               email: true,
               phone: true,
-              isAdmin: true, // 👈 без password!
+              isAdmin: true,
             },
           },
         },
         orderBy: { startTime: "asc" },
       });
     }),
-    createShift: protectedProcedure.input(addShift).mutation(async ({ ctx, input }) => {
+  createShift: protectedProcedure
+    .input(addShift)
+    .mutation(async ({ ctx, input }) => {
       const { startDate, endDate, worker } = input;
 
       return ctx.prisma.shift.create({
@@ -40,9 +42,23 @@ export const shiftsRouter = router({
         },
       });
     }),
-    deleteShift: protectedProcedure.input(deleteShift).mutation(async ({ ctx, input }) => {
+  deleteShift: protectedProcedure
+    .input(deleteShift)
+    .mutation(async ({ ctx, input }) => {
       return ctx.prisma.shift.delete({
         where: { id: input.id },
+      });
+    }),
+  update: protectedProcedure
+    .input(shiftsUpdate)
+    .mutation(async ({ ctx, input }) => {
+      const { id, startDate, endDate } = input;
+      return ctx.prisma.shift.update({
+        where: { id: id },
+        data: {
+          startTime: new Date(startDate),
+          endTime: new Date(endDate),
+        }
       });
     }),
 });
