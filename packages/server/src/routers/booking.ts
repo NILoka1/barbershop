@@ -12,7 +12,6 @@ export const bookingRouter = router({
           startTime: { gte: new Date(startDate) },
           endTime: { lte: new Date(endDate) },
         },
-        select: {},
         orderBy: { startTime: "asc" },
       });
     }),

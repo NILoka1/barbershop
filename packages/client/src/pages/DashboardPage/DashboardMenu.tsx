@@ -71,7 +71,7 @@ export const DashboardMenu = React.memo(
               <Button mb="md" w={"100%"}>
                 Добавить запись
               </Button>
-              <BookingList />
+              <BookingList dayDatail={dayDatail}/>
             </Tabs.Panel>
           </Tabs>
         </Paper>
