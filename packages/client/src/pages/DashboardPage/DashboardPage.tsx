@@ -1,13 +1,13 @@
 import { Flex } from "@mantine/core";
 import dayjs from "dayjs";
 import { useShiftsPage } from "./useShaitsPage";
-import { ShiftMenu } from "./ShiftMenu";
+import { DashboardMenu } from "./DashboardMenu";
 import { useCallback, useState } from "react";
 import type { ShiftFromDB } from "shared";
-import { CreateShiftModal } from "./CreateShiftModal";
-import ShiftCalendar from "./ShiftCalendar";
+import { ShiftCreateModal } from "./Shift/ShiftCreateModal";
+import ShiftCalendar from "./Shift/ShiftCalendar";
 
-export const ShiftsPage = () => {
+export const DashboardPage = () => {
   const {
     selected,
     currentMonth,
@@ -45,7 +45,7 @@ export const ShiftsPage = () => {
           setSelected={handleSetSelected}
         />
         <Flex w={{ base: "90%", sm: "40%" }} h={"100%"}>
-          <ShiftMenu
+          <DashboardMenu
             dayDatail={dayDetail}
             currentMonth={currentMonth}
             onEdit={openEditModal}
@@ -53,7 +53,7 @@ export const ShiftsPage = () => {
           />
         </Flex>
       </Flex>
-      <CreateShiftModal
+      <ShiftCreateModal
         currentMonth={currentMonth}
         date={dayjs(selected).format("YYYY-MM-DD")}
         modal={modal}

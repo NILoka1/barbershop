@@ -1,15 +1,10 @@
-import { Paper, Tabs, Button, Text, Flex } from "@mantine/core";
-import dayjs from "dayjs";
+import { Paper, Tabs, Button, Text } from "@mantine/core";
 import React, { useState } from "react";
 import type { ShiftFromDB } from "shared";
-import {
-  IconClock,
-  IconCalendar,
-  IconTrash,
-  IconEdit,
-} from "@tabler/icons-react";
+import { IconClock, IconCalendar } from "@tabler/icons-react";
 import { confirmModal } from "src/utils/confirmModals";
 import { useDeleteShift } from "src/api/shifts/delete";
+import { ShiftsList } from "./Shift/ShiftsList";
 
 interface ShiftMenuProps {
   dayDatail: ShiftFromDB[];
@@ -21,7 +16,7 @@ interface ShiftMenuProps {
   onCreate: () => void;
 }
 
-export const ShiftMenu = React.memo(
+export const DashboardMenu = React.memo(
   ({ dayDatail, currentMonth, onEdit, onCreate }: ShiftMenuProps) => {
     const [activeTab, setActiveTab] = useState<string | null>("shifts");
     const deleteShift = useDeleteShift(currentMonth);
@@ -64,39 +59,11 @@ export const ShiftMenu = React.memo(
               <Button mb="sm" w={"100%"} onClick={onCreate}>
                 Добавить смену
               </Button>
-              {dayDatail.map((shift) => (
-                <Paper withBorder shadow="xs" p="3" mb="sm" key={shift.id}>
-                  <Flex justify="space-between" align="center">
-                    <Text>{shift.worker.name}</Text>
-                    <Flex gap={5} align="center">
-                      <Text>
-                        {dayjs(shift.startTime)
-                          .tz("Europe/Moscow")
-                          .format("HH:mm")}{" "}
-                        —{" "}
-                        {dayjs(shift.endTime)
-                          .tz("Europe/Moscow")
-                          .format("HH:mm")}
-                      </Text>
-                      <Button
-                        onClick={() => onEdit(shift)}
-                        variant="subtle"
-                        size="xs"
-                      >
-                        <IconEdit size={16} />
-                      </Button>
-                      <Button
-                        onClick={() => handleDelete(shift.id)}
-                        variant="subtle"
-                        color="red"
-                        size="xs"
-                      >
-                        <IconTrash size={16} />
-                      </Button>
-                    </Flex>
-                  </Flex>
-                </Paper>
-              ))}
+              <ShiftsList
+                dayDatail={dayDatail}
+                onEdit={onEdit}
+                onDelete={handleDelete}
+              />
             </Tabs.Panel>
 
             <Tabs.Panel value="bookings" pt="md">

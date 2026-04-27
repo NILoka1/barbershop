@@ -12,7 +12,7 @@ import { useUpdateShift } from "src/api/shifts/update";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-interface CreateShiftModalProps {
+interface ShiftCreateModalProps {
   date: string;
   modal: {
     type: "edit" | "create";
@@ -25,12 +25,12 @@ interface CreateShiftModalProps {
   };
 }
 
-export const CreateShiftModal = ({
+export const ShiftCreateModal = ({
   date,
   modal,
   close,
   currentMonth,
-}: CreateShiftModalProps) => {
+}: ShiftCreateModalProps) => {
   const createShift = useCreateShift();
   const editingShift = useUpdateShift(currentMonth);
 
@@ -100,7 +100,7 @@ export const CreateShiftModal = ({
     })) ?? [];
 
   return (
-    <Modal onClose={close} opened={!!modal} title="Добавить смену" centered>
+    <Modal onClose={close} opened={!!modal} title={modal?.type === "edit" ? "Редактировать смену" : "Добавить смену"} centered>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
           <Select
@@ -124,7 +124,7 @@ export const CreateShiftModal = ({
           />
 
           <Button type="submit" loading={createShift.isPending}>
-            Добавить смену
+            {modal?.type === "edit" ? "Сохранить изменения" : "Добавить смену"}
           </Button>
         </Stack>
       </form>
