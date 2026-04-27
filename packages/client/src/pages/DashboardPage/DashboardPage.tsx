@@ -43,6 +43,10 @@ export const DashboardPage = () => {
     setBookingModal({ type: "create", item: null });
   }, []);
 
+  const openEditBookingModal = useCallback((item: BookingFromDB) => {
+    setBookingModal({ type: "edit", item });
+  }, []);
+
   const closeBookingModal = useCallback(() => {
     setBookingModal(null);
   }, []);
@@ -65,6 +69,7 @@ export const DashboardPage = () => {
             onEdit={openEditModal}
             onCreate={openCreateModal}
             onOpenBookingModal={openBookingModal}
+            onOpenEditBookingModal ={openEditBookingModal}
           />
         </Flex>
       </Flex>
@@ -75,6 +80,7 @@ export const DashboardPage = () => {
         close={closeModal}
       />
       <BookingModal
+        dayDatail={dayDetail}
         date={dayjs(selected).format("YYYY-MM-DD")}
         modal={BookingModalData}
         close={closeBookingModal}

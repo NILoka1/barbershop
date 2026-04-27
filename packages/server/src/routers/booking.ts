@@ -12,23 +12,26 @@ export const bookingRouter = router({
           startTime: { gte: new Date(startDate) },
           endTime: { lte: new Date(endDate) },
         },
-        select:{
+        select: {
           id: true,
           startTime: true,
           endTime: true,
           status: true,
-          service:{
+          service: {
             select: {
+              id: true,
               name: true,
             },
           },
           client: {
             select: {
+              id: true,
               name: true,
             },
           },
           shift: {
             select: {
+              id: true,
               worker: {
                 select: {
                   name: true,
@@ -40,4 +43,21 @@ export const bookingRouter = router({
         orderBy: { startTime: "asc" },
       });
     }),
+
+  getServices: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.service.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+  }),
+  getClients: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.client.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+  }),
 });

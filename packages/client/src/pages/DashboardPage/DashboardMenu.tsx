@@ -1,6 +1,6 @@
 import { Paper, Tabs, Button, Text } from "@mantine/core";
 import React, { useState } from "react";
-import type { ShiftFromDB } from "shared";
+import type { BookingFromDB, ShiftFromDB } from "shared";
 import { IconClock, IconCalendar } from "@tabler/icons-react";
 import { confirmModal } from "src/utils/confirmModals";
 import { useDeleteShift } from "src/api/shifts/delete";
@@ -16,10 +16,18 @@ interface ShiftMenuProps {
   onEdit: (shift: ShiftFromDB) => void;
   onCreate: () => void;
   onOpenBookingModal: () => void;
+  onOpenEditBookingModal: (item: BookingFromDB) => void;
 }
 
 export const DashboardMenu = React.memo(
-  ({ dayDatail, currentMonth, onEdit, onCreate,onOpenBookingModal }: ShiftMenuProps) => {
+  ({
+    dayDatail,
+    currentMonth,
+    onEdit,
+    onCreate,
+    onOpenBookingModal,
+    onOpenEditBookingModal
+  }: ShiftMenuProps) => {
     const [activeTab, setActiveTab] = useState<string | null>("shifts");
     const deleteShift = useDeleteShift(currentMonth);
     const handleDelete = (id: string) => {
@@ -72,7 +80,10 @@ export const DashboardMenu = React.memo(
               <Button onClick={onOpenBookingModal} mb="md" w={"100%"}>
                 Добавить запись
               </Button>
-              <BookingList dayDatail={dayDatail} onOpenBookingModal={onOpenBookingModal} />
+              <BookingList
+                dayDatail={dayDatail}
+                onOpenBookingModal={onOpenEditBookingModal}
+              />
             </Tabs.Panel>
           </Tabs>
         </Paper>
