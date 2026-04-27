@@ -3,9 +3,10 @@ import dayjs from "dayjs";
 import { useShiftsPage } from "./useShaitsPage";
 import { DashboardMenu } from "./DashboardMenu";
 import { useCallback, useState } from "react";
-import type { ShiftFromDB } from "shared";
+import type { BookingFromDB, ShiftFromDB } from "shared";
 import { ShiftCreateModal } from "./Shift/ShiftCreateModal";
 import ShiftCalendar from "./Shift/ShiftCalendar";
+import { BookingModal } from "./Booking/BookingModal";
 
 export const DashboardPage = () => {
   const {
@@ -21,6 +22,11 @@ export const DashboardPage = () => {
     item: ShiftFromDB | null;
   } | null>(null);
 
+  const [BookingModalData, setBookingModal] = useState<{
+    type: "edit" | "create";
+    item: BookingFromDB | null;
+  } | null>(null);
+
   const openEditModal = useCallback((item: ShiftFromDB) => {
     setModal({ type: "edit", item });
   }, []);
@@ -31,6 +37,14 @@ export const DashboardPage = () => {
 
   const closeModal = useCallback(() => {
     setModal(null);
+  }, []);
+
+  const openBookingModal = useCallback(() => {
+    setBookingModal({ type: "create", item: null });
+  }, []);
+
+  const closeBookingModal = useCallback(() => {
+    setBookingModal(null);
   }, []);
   return (
     <>
@@ -50,6 +64,7 @@ export const DashboardPage = () => {
             currentMonth={currentMonth}
             onEdit={openEditModal}
             onCreate={openCreateModal}
+            onOpenBookingModal={openBookingModal}
           />
         </Flex>
       </Flex>
@@ -58,6 +73,11 @@ export const DashboardPage = () => {
         date={dayjs(selected).format("YYYY-MM-DD")}
         modal={modal}
         close={closeModal}
+      />
+      <BookingModal
+        date={dayjs(selected).format("YYYY-MM-DD")}
+        modal={BookingModalData}
+        close={closeBookingModal}
       />
     </>
   );

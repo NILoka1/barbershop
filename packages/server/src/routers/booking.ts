@@ -12,6 +12,31 @@ export const bookingRouter = router({
           startTime: { gte: new Date(startDate) },
           endTime: { lte: new Date(endDate) },
         },
+        select:{
+          id: true,
+          startTime: true,
+          endTime: true,
+          status: true,
+          service:{
+            select: {
+              name: true,
+            },
+          },
+          client: {
+            select: {
+              name: true,
+            },
+          },
+          shift: {
+            select: {
+              worker: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
         orderBy: { startTime: "asc" },
       });
     }),

@@ -15,10 +15,11 @@ interface ShiftMenuProps {
   };
   onEdit: (shift: ShiftFromDB) => void;
   onCreate: () => void;
+  onOpenBookingModal: () => void;
 }
 
 export const DashboardMenu = React.memo(
-  ({ dayDatail, currentMonth, onEdit, onCreate }: ShiftMenuProps) => {
+  ({ dayDatail, currentMonth, onEdit, onCreate,onOpenBookingModal }: ShiftMenuProps) => {
     const [activeTab, setActiveTab] = useState<string | null>("shifts");
     const deleteShift = useDeleteShift(currentMonth);
     const handleDelete = (id: string) => {
@@ -68,10 +69,10 @@ export const DashboardMenu = React.memo(
             </Tabs.Panel>
 
             <Tabs.Panel value="bookings" pt="md">
-              <Button mb="md" w={"100%"}>
+              <Button onClick={onOpenBookingModal} mb="md" w={"100%"}>
                 Добавить запись
               </Button>
-              <BookingList dayDatail={dayDatail}/>
+              <BookingList dayDatail={dayDatail} onOpenBookingModal={onOpenBookingModal} />
             </Tabs.Panel>
           </Tabs>
         </Paper>
