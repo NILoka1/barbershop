@@ -5,6 +5,7 @@ import { IconClock, IconCalendar } from "@tabler/icons-react";
 import { confirmModal } from "src/utils/confirmModals";
 import { useDeleteShift } from "src/api/shifts/delete";
 import { ShiftsList } from "./Shift/ShiftsList";
+import BookingList from "./Booking/BookingList";
 
 interface ShiftMenuProps {
   dayDatail: ShiftFromDB[];
@@ -70,6 +71,7 @@ export const DashboardMenu = React.memo(
               <Button mb="md" w={"100%"}>
                 Добавить запись
               </Button>
+              <BookingList />
             </Tabs.Panel>
           </Tabs>
         </Paper>
