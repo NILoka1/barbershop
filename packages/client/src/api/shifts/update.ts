@@ -1,4 +1,4 @@
-import { trpc } from "../../main";
+import { trpc } from "src/main";
 
 export function useUpdateShift(dates: { startDate: string; endDate: string }) {
   const utils = trpc.useUtils();

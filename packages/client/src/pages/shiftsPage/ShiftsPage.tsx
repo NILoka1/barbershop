@@ -1,14 +1,37 @@
 import { Flex } from "@mantine/core";
-import { Calendar } from "@mantine/dates";
 import dayjs from "dayjs";
 import { useShiftsPage } from "./useShaitsPage";
 import { ShiftMenu } from "./ShiftMenu";
+import { useCallback, useState } from "react";
+import type { ShiftFromDB } from "shared";
 import { CreateShiftModal } from "./CreateShiftModal";
+import ShiftCalendar from "./ShiftCalendar";
 
 export const ShiftsPage = () => {
-  const { selected, currentMonth, handleDateChange, dayDetail, setSelected } =
-    useShiftsPage();
+  const {
+    selected,
+    currentMonth,
+    handleDateChange,
+    dayDetail,
+    handleSetSelected,
+  } = useShiftsPage();
 
+  const [modal, setModal] = useState<{
+    type: "edit" | "create";
+    item: ShiftFromDB | null;
+  } | null>(null);
+
+  const openEditModal = useCallback((item: ShiftFromDB) => {
+    setModal({ type: "edit", item });
+  }, []);
+
+  const openCreateModal = useCallback(() => {
+    setModal({ type: "create", item: null });
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setModal(null);
+  }, []);
   return (
     <>
       <Flex
@@ -16,22 +39,26 @@ export const ShiftsPage = () => {
         align={{ base: "center", sm: "flex-start" }}
         h="100%"
       >
-        <Flex w={{ base: "90%", xs: "60%", sm: "60%" }} maw={650}>
-          <Calendar
-            fullWidth
-            defaultDate={currentMonth}
-            onDateChange={handleDateChange}
-            getDayProps={(date) => ({
-              selected: selected ? dayjs(date).isSame(selected, "day") : false,
-              onClick: () => setSelected(dayjs(date).toDate()), // 👈 меняет выбранный день
-            })}
+        <ShiftCalendar
+          handleDateChange={handleDateChange}
+          selected={selected}
+          setSelected={handleSetSelected}
+        />
+        <Flex w={{ base: "90%", sm: "40%" }} h={"100%"}>
+          <ShiftMenu
+            dayDatail={dayDetail}
+            currentMonth={currentMonth}
+            onEdit={openEditModal}
+            onCreate={openCreateModal}
           />
         </Flex>
-        <Flex w={{ base: "90%", sm: "40%" }} h={"100%"}>
-          <ShiftMenu dayDatail={dayDetail} currentMonth={currentMonth} />
-        </Flex>
       </Flex>
-      <CreateShiftModal date={dayjs(selected).format("YYYY-MM-DD")} />
+      <CreateShiftModal
+        currentMonth={currentMonth}
+        date={dayjs(selected).format("YYYY-MM-DD")}
+        modal={modal}
+        close={closeModal}
+      />
     </>
   );
 };

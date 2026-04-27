@@ -1,19 +1,38 @@
 import { Modal, Select, Button, Stack, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { trpc } from "src/main";
-import { useModalStore } from "src/stores/workerModalStore";
 import { useCreateShift } from "src/api/shifts/create";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { useEffect } from "react";
+import type { ShiftFromDB } from "shared";
+import { useUpdateShift } from "src/api/shifts/update";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export const CreateShiftModal = ({ date }: { date: string }) => {
-  const { isCreateShiftOpened, closeCreateShiftModal } = useModalStore();
+interface CreateShiftModalProps {
+  date: string;
+  modal: {
+    type: "edit" | "create";
+    item: ShiftFromDB | null;
+  } | null;
+  close: () => void;
+  currentMonth: {
+    startDate: string;
+    endDate: string;
+  };
+}
+
+export const CreateShiftModal = ({
+  date,
+  modal,
+  close,
+  currentMonth,
+}: CreateShiftModalProps) => {
   const createShift = useCreateShift();
+  const editingShift = useUpdateShift(currentMonth);
 
   const { data: workers } = trpc.workers.getAll.useQuery();
 
@@ -30,6 +49,17 @@ export const CreateShiftModal = ({ date }: { date: string }) => {
     form.setFieldValue("startDate", date);
   }, [date]);
 
+  useEffect(() => {
+    if (modal?.type === "edit" && modal.item) {
+      form.setValues({
+        worker: modal.item.worker.id,
+        startDate: dayjs(modal.item.startTime).format("YYYY-MM-DD"),
+        startTime: dayjs(modal.item.startTime).format("HH:mm"),
+        endTime: dayjs(modal.item.endTime).format("HH:mm"),
+      });
+    }
+  }, [modal]);
+
   const handleSubmit = (values: typeof form.values) => {
     const dateOnly = values.startDate.split("T")[0];
 
@@ -41,11 +71,22 @@ export const CreateShiftModal = ({ date }: { date: string }) => {
       .tz(`${dateOnly}T${values.endTime}:00`, "Europe/Moscow")
       .toISOString();
 
+    if (modal?.type === "edit" && modal.item) {
+      return editingShift.mutate(
+        { id: modal.item.id, startDate, endDate },
+        {
+          onSuccess: () => {
+            close();
+            form.reset();
+          },
+        },
+      );
+    }
     createShift.mutate(
       { startDate, endDate, worker: values.worker },
       {
         onSuccess: () => {
-          closeCreateShiftModal();
+          close();
           form.reset();
         },
       },
@@ -59,12 +100,7 @@ export const CreateShiftModal = ({ date }: { date: string }) => {
     })) ?? [];
 
   return (
-    <Modal
-      onClose={closeCreateShiftModal}
-      opened={isCreateShiftOpened}
-      title="Добавить смену"
-      centered
-    >
+    <Modal onClose={close} opened={!!modal} title="Добавить смену" centered>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
           <Select
