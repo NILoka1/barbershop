@@ -6,6 +6,7 @@ import { confirmModal } from "src/utils/confirmModals";
 import { useDeleteShift } from "src/api/shifts/delete";
 import { ShiftsList } from "./Shift/ShiftsList";
 import BookingList from "./Booking/BookingList";
+import { useDeleteBooking } from "src/api/booking/delete";
 
 interface ShiftMenuProps {
   dayDatail: ShiftFromDB[];
@@ -35,6 +36,13 @@ export const DashboardMenu = React.memo(
         deleteShift.mutate({ id: id });
       });
     };
+
+    const deleteBooking = useDeleteBooking(currentMonth);
+    const handleDeleteBooking = (id: string) => {
+      confirmModal("Вы действительно хотите удалить эту запись", () => {
+        deleteBooking.mutate({ id: id });
+      });
+    }
 
     if (!dayDatail || dayDatail.length === 0) {
       return (
@@ -83,6 +91,7 @@ export const DashboardMenu = React.memo(
               <BookingList
                 dayDatail={dayDatail}
                 onOpenBookingModal={onOpenEditBookingModal}
+                onDelete={handleDeleteBooking}
               />
             </Tabs.Panel>
           </Tabs>

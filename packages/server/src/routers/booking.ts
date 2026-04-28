@@ -1,5 +1,10 @@
+import z from "zod";
 import { protectedProcedure, router } from "../trpc";
-import { createBookingProps, getBookingInDayProps, UpdateBookingProps } from "shared";
+import {
+  createBookingProps,
+  getBookingInDayProps,
+  UpdateBookingProps,
+} from "shared";
 
 export const bookingRouter = router({
   getByDay: protectedProcedure
@@ -79,8 +84,7 @@ export const bookingRouter = router({
   updateBooking: protectedProcedure
     .input(UpdateBookingProps)
     .mutation(async ({ ctx, input }) => {
-      const { id, service, shift, client, startTime, endTime, status } =
-        input;
+      const { id, service, shift, client, startTime, endTime, status } = input;
       return ctx.prisma.booking.update({
         where: {
           id: id,
@@ -94,5 +98,14 @@ export const bookingRouter = router({
           status: status,
         },
       });
+    }),
+  deleteBooking: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ctx, input}) => {
+      return ctx.prisma.booking.delete({
+        where:{
+          id: input.id
+        }
+      })
     }),
 });

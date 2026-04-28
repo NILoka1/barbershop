@@ -8,10 +8,11 @@ import { IconEdit, IconTrash } from "@tabler/icons-react";
 interface BookingListInput {
   dayDatail: ShiftFromDB[];
   onOpenBookingModal: (item: BookingFromDB) => void;
+  onDelete: (id: string) => void;
 }
 
 const BookingList = React.memo(
-  ({ dayDatail, onOpenBookingModal }: BookingListInput) => {
+  ({ dayDatail, onOpenBookingModal, onDelete }: BookingListInput) => {
     const { data } = trpc.booking.getByDay.useQuery({
       startDate: dayjs(dayDatail[0].startTime)
         .tz("Europe/Moscow")
@@ -91,12 +92,20 @@ const BookingList = React.memo(
               variant="subtle"
               color="gray"
               size="sm"
-              onClick={()=> onOpenBookingModal(booking)}
+              onClick={() => onOpenBookingModal(booking)}
               title="Редактировать"
             >
               <IconEdit size={14} />
             </ActionIcon>
-            <ActionIcon variant="subtle" color="red" size="sm" title="Удалить">
+            <ActionIcon
+              onClick={() => {
+                onDelete(booking.id);
+              }}
+              variant="subtle"
+              color="red"
+              size="sm"
+              title="Удалить"
+            >
               <IconTrash size={14} />
             </ActionIcon>
           </Group>
