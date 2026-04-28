@@ -6,12 +6,12 @@ import {
   BookingStatus,
   BookingStatusLabels,
   createBookingForm,
-  createBookingProps,
   type BookingFromDB,
   type createBookingFormOutput,
   type ShiftFromDB,
 } from "shared";
 import { useCreateBooking } from "src/api/booking/create";
+import { useUpdateBooking } from "src/api/booking/update";
 import { trpc } from "src/main";
 
 interface BookingModalProps {
@@ -45,7 +45,7 @@ export const BookingModal = ({
     validateInputOnBlur: true,
   });
 
-  const CreateBooking = useCreateBooking({
+  const dateProps = {
     startDate: dayjs(dayDatail[0]?.startTime)
       .tz("Europe/Moscow")
       .startOf("day")
@@ -54,7 +54,10 @@ export const BookingModal = ({
       .tz("Europe/Moscow")
       .endOf("day")
       .toISOString(),
-  });
+  };
+
+  const CreateBooking = useCreateBooking(dateProps);
+  const UpdateBooking = useUpdateBooking(dateProps);
 
   const { data: services } = trpc.booking.getServices.useQuery();
   const { data: clients } = trpc.booking.getClients.useQuery();
@@ -76,25 +79,57 @@ export const BookingModal = ({
 
   const handleSubmit = (value: createBookingFormOutput) => {
     const dateOnly = value.startDate.split("T")[0];
-    const data: createBookingProps = {
-      id: value.id,
-      serviceId: value.serviceId,
-      shiftId: value.shiftId,
-      clientId: value.clientId,
-      startTime: dayjs
-        .tz(`${dateOnly}T${value.startTime}:00`, "Europe/Moscow")
-        .toISOString(),
-      endTime: dayjs
-        .tz(`${dateOnly}T${value.endTime}:00`, "Europe/Moscow")
-        .toISOString(),
-      status: value.status as BookingStatus,
-    };
-    CreateBooking.mutate(data, {
+
+    const startTime = dayjs
+      .tz(`${dateOnly}T${value.startTime}:00`, "Europe/Moscow")
+      .toISOString();
+    const endTime = dayjs
+      .tz(`${dateOnly}T${value.endTime}:00`, "Europe/Moscow")
+      .toISOString();
+
+    const onSuccess = {
       onSuccess: () => {
         close();
         form.reset();
       },
-    });
+    };
+    if (!!modal && modal?.type === "edit") {
+      return UpdateBooking.mutate(
+        {
+          id: value.id,
+          startTime,
+          endTime,
+          status: value.status as BookingStatus,
+          client: {
+            id: value.clientId,
+            name: modal.item?.client.name || "",
+          },
+          service: {
+            id: value.serviceId,
+            name: modal.item?.service.name || "",
+          },
+          shift: {
+            id: value.shiftId,
+            worker: {
+              name: modal.item?.shift.worker.name || "",
+            },
+          },
+        },
+        onSuccess,
+      );
+    }
+    CreateBooking.mutate(
+      {
+        id: value.id,
+        serviceId: value.serviceId,
+        shiftId: value.shiftId,
+        clientId: value.clientId,
+        startTime: startTime,
+        endTime: endTime,
+        status: value.status as BookingStatus,
+      },
+      onSuccess,
+    );
   };
 
   return (

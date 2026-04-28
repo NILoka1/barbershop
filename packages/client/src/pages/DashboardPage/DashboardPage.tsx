@@ -45,6 +45,7 @@ export const DashboardPage = () => {
 
   const openEditBookingModal = useCallback((item: BookingFromDB) => {
     setBookingModal({ type: "edit", item });
+    console.log(item);
   }, []);
 
   const closeBookingModal = useCallback(() => {

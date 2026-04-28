@@ -32,3 +32,26 @@ export const createBookingProps = z.object({
 });
 
 export type createBookingProps = z.infer<typeof createBookingProps>;
+
+export const UpdateBookingProps = z.object({
+  id: z.string(),
+  service: z.object({
+    id: z.string(),
+    name: z.string(),
+  }),
+  shift: z.object({
+    id: z.string(),
+    worker: z.object({
+      name: z.string(),
+    }),
+  }),
+  client: z.object({
+    id: z.string(),
+    name: z.string(),
+  }),
+  startTime: z.string().datetime(),
+  endTime: z.string().datetime(),
+  status: z.nativeEnum(BookingStatus),
+});
+
+export type UpdateBookingProps = z.infer<typeof UpdateBookingProps>;
