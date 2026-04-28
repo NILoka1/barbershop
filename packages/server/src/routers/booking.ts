@@ -1,5 +1,5 @@
 import { protectedProcedure, router } from "../trpc";
-import { getBookingInDayProps } from "shared";
+import { createBookingProps, getBookingInDayProps } from "shared";
 
 export const bookingRouter = router({
   getByDay: protectedProcedure
@@ -60,4 +60,20 @@ export const bookingRouter = router({
       },
     });
   }),
+  createBooking: protectedProcedure
+    .input(createBookingProps)
+    .mutation(async ({ ctx, input }) => {
+      const { serviceId, shiftId, clientId, startTime, endTime, status } =
+        input;
+      return ctx.prisma.booking.create({
+        data: {
+          serviceId: serviceId,
+          shiftId: shiftId,
+          clientId: clientId,
+          startTime: new Date(startTime),
+          endTime: new Date(endTime),
+          status: status,
+        },
+      });
+    }),
 });
