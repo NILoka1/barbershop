@@ -1,11 +1,14 @@
 import { Button, Modal, Select, Stack, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { schemaResolver, useForm } from "@mantine/form";
 import dayjs from "dayjs";
 import React, { useEffect } from "react";
 import {
   BookingStatus,
   BookingStatusLabels,
+  createBookingForm,
+  createBookingProps,
   type BookingFromDB,
+  type createBookingFormOutput,
   type ShiftFromDB,
 } from "shared";
 import { trpc } from "src/main";
@@ -37,6 +40,8 @@ export const BookingModal = ({
       endTime: "13:00",
       status: "PENDING",
     },
+    validate: schemaResolver(createBookingForm),
+    validateInputOnBlur: true,
   });
 
   const { data: services } = trpc.booking.getServices.useQuery();
@@ -57,6 +62,10 @@ export const BookingModal = ({
     }
   }, [modal]);
 
+  const handleSubmit = (value: createBookingFormOutput) => {
+    console.log(value);
+  };
+
   return (
     <>
       <Modal
@@ -67,7 +76,7 @@ export const BookingModal = ({
         }
         centered
       >
-        <form>
+        <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack>
             <Select
               label="Исполнитель"
