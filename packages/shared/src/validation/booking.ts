@@ -30,3 +30,5 @@ export const createBookingProps = z.object({
   endTime: z.string().datetime(),
   status: z.nativeEnum(BookingStatus),
 });
+
+export type createBookingProps = z.infer<typeof createBookingProps>;

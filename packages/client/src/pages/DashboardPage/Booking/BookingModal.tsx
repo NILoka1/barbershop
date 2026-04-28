@@ -11,6 +11,7 @@ import {
   type createBookingFormOutput,
   type ShiftFromDB,
 } from "shared";
+import { useCreateBooking } from "src/api/booking/create";
 import { trpc } from "src/main";
 
 interface BookingModalProps {
@@ -44,6 +45,17 @@ export const BookingModal = ({
     validateInputOnBlur: true,
   });
 
+  const CreateBooking = useCreateBooking({
+    startDate: dayjs(dayDatail[0]?.startTime)
+      .tz("Europe/Moscow")
+      .startOf("day")
+      .toISOString(),
+    endDate: dayjs(dayDatail[0]?.endTime)
+      .tz("Europe/Moscow")
+      .endOf("day")
+      .toISOString(),
+  });
+
   const { data: services } = trpc.booking.getServices.useQuery();
   const { data: clients } = trpc.booking.getClients.useQuery();
 
@@ -63,7 +75,26 @@ export const BookingModal = ({
   }, [modal]);
 
   const handleSubmit = (value: createBookingFormOutput) => {
-    console.log(value);
+    const dateOnly = value.startDate.split("T")[0];
+    const data: createBookingProps = {
+      id: value.id,
+      serviceId: value.serviceId,
+      shiftId: value.shiftId,
+      clientId: value.clientId,
+      startTime: dayjs
+        .tz(`${dateOnly}T${value.startTime}:00`, "Europe/Moscow")
+        .toISOString(),
+      endTime: dayjs
+        .tz(`${dateOnly}T${value.endTime}:00`, "Europe/Moscow")
+        .toISOString(),
+      status: value.status as BookingStatus,
+    };
+    CreateBooking.mutate(data, {
+      onSuccess: () => {
+        close();
+        form.reset();
+      },
+    });
   };
 
   return (
