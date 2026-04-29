@@ -1,4 +1,5 @@
 import { Modal, Select, Button, Stack, TextInput } from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { trpc } from "src/main";
 import { useCreateShift } from "src/api/shifts/create";
@@ -13,7 +14,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 interface ShiftCreateModalProps {
-  date: string;
+  date?: string;
   modal: {
     type: "edit" | "create";
     item: ShiftFromDB | null;
@@ -39,14 +40,16 @@ export const ShiftCreateModal = ({
   const form = useForm({
     initialValues: {
       worker: "",
-      startDate: date,
+      startDate: date ? date.split("T")[0] : dayjs().format("YYYY-MM-DD"),
       startTime: "09:00",
       endTime: "18:00",
     },
   });
 
   useEffect(() => {
-    form.setFieldValue("startDate", date);
+    if (date) {
+      form.setFieldValue("startDate", date.split("T")[0]);
+    }
   }, [date]);
 
   useEffect(() => {
@@ -61,7 +64,7 @@ export const ShiftCreateModal = ({
   }, [modal]);
 
   const handleSubmit = (values: typeof form.values) => {
-    const dateOnly = values.startDate.split("T")[0];
+    const dateOnly = values.startDate;
 
     const startDate = dayjs
       .tz(`${dateOnly}T${values.startTime}:00`, "Europe/Moscow")
@@ -100,9 +103,30 @@ export const ShiftCreateModal = ({
     })) ?? [];
 
   return (
-    <Modal onClose={close} opened={!!modal} title={modal?.type === "edit" ? "Редактировать смену" : "Добавить смену"} centered>
+    <Modal
+      onClose={close}
+      opened={!!modal}
+      title={modal?.type === "edit" ? "Редактировать смену" : "Добавить смену"}
+      centered
+    >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
+          {!date && (
+            <DatePickerInput
+              label="Дата"
+              value={
+                form.values.startDate ? new Date(form.values.startDate) : null
+              }
+              onChange={(date) =>
+                form.setFieldValue(
+                  "startDate",
+                  date ? dayjs(date).format("YYYY-MM-DD") : "",
+                )
+              }
+              valueFormat="DD.MM.YYYY"
+            />
+          )}
+
           <Select
             label="Мастер"
             placeholder="Выберите мастера"

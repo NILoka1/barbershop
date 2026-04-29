@@ -21,7 +21,7 @@ export const AppSh = ({ children }: AppShProps) => {
     { name: "Главная", link: "/workerDashbord" },
     { name: "Услуги", link: "/services" },
     { name: "Смены", link: "/shifts" },
-    { name: "Записи", link: "/bookings" },
+    { name: "Записи", link: "/booking" },
     { name: "Мастера", link: "/workers" },
   ];
 

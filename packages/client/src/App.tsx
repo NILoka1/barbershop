@@ -2,11 +2,12 @@ import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import LoginPage from "./pages/loginPage/LoginPage";
 import { HomePage } from "./pages/homePage/HomePage";
-import WorkerDashbord from "./pages/workerDashbord/WorkerDashbord";
+import { ShiftsPage } from "./pages/shiftsPage/ShiftsPage";
 import { AppSh } from "./components/AppShell";
 import ServicesPage from "./pages/servicesPage/ServicesPage";
 import WorkersPage from "./pages/workersPage/WorkersPage";
-import {DashboardPage} from "./pages/DashboardPage/DashboardPage";
+import { DashboardPage } from "./pages/DashboardPage/DashboardPage";
+import { BookingPage } from "./pages/BookingPage/BookingPage";
 function App() {
   return (
     <BrowserRouter>
@@ -22,10 +23,11 @@ function App() {
               </AppSh>
             }
           >
-            <Route path="/workerDashbord" element={<DashboardPage/>} />
+            <Route path="/workerDashbord" element={<DashboardPage />} />
             <Route path="/services" element={<ServicesPage />}></Route>
             <Route path="/workers" element={<WorkersPage />} />
-            <Route path="/shifts" element={<WorkerDashbord/>} />
+            <Route path="/shifts" element={<ShiftsPage />} />
+            <Route path="/booking" element={<BookingPage />} />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>
         </Route>

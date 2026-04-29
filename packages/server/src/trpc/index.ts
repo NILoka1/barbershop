@@ -9,7 +9,6 @@ const t = initTRPC.context<Context>().create({
 export const router = t.router;
 export const publicProcedure = t.procedure;
 
-// Middleware для проверки авторизации
 const isAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.worker) {
     throw new TRPCError({ code: 'UNAUTHORIZED' });
