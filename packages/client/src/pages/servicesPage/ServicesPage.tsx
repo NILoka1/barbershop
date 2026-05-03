@@ -16,11 +16,13 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import useServices from "./useServices";
-import { getCategoryLabel } from "shared";
-import { useModalStore } from "../../stores/workerModalStore";
+import { getCategoryLabel, type UpdateServiceInput } from "shared";
 import { EditServiceModalContainer } from "./modals/EditModalContainer";
 import { CreateServiceModalContainer } from "./modals/CreateModalContainer";
-import { useMediaQuery } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { CreateServiceModal } from "./modals/CreateServiceModal";
+import { EditServiceModal } from "./modals/EditServiceModal";
+import { useState } from "react";
 const ServicesPage = () => {
   const {
     servicesList,
@@ -31,11 +33,19 @@ const ServicesPage = () => {
     setQuery,
     filtered,
   } = useServices();
-  const openEditModal = useModalStore((state) => state.openEditServiceModal);
-  const openCreateModal = useModalStore(
-    (state) => state.openCreateServiceModal,
-  );
+
+  const [createOpened, { open: createOpen, close: createClose }] =
+    useDisclosure();
+  const [editOpened, { open: editOpen, close: editClose }] = useDisclosure();
+  const [editingSetvice, setEditingService] =
+    useState<UpdateServiceInput | null>(null);
+
   const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const handleOpenEdit = (service: UpdateServiceInput) => {
+    setEditingService(service);
+    editOpen();
+  };
 
   if (isLoading) {
     return (
@@ -57,13 +67,7 @@ const ServicesPage = () => {
     return (
       <Stack>
         <Text>Ещё нет ни одной услуги</Text>
-        <Button
-          onClick={() => {
-            openCreateModal();
-          }}
-        >
-          Добавить услугу
-        </Button>
+        <Button onClick={createOpen}>Добавить услугу</Button>
       </Stack>
     );
   }
@@ -84,7 +88,7 @@ const ServicesPage = () => {
             />
           )}
 
-          <Button onClick={openCreateModal}>Добавить услугу</Button>
+          <Button onClick={createOpen}>Добавить услугу</Button>
         </Flex>
         {isMobile && (
           <TextInput
@@ -118,7 +122,7 @@ const ServicesPage = () => {
                     <Flex gap="xs">
                       <Button
                         onClick={() => {
-                          openEditModal(service);
+                          handleOpenEdit(service);
                         }}
                         variant="subtle"
                         size="xs"
@@ -141,6 +145,12 @@ const ServicesPage = () => {
           </Table>
         </Table.ScrollContainer>
       </Stack>
+      <CreateServiceModal opened={createOpened} onClose={createClose} />
+      <EditServiceModal
+        opened={editOpened}
+        onClose={editClose}
+        service={editingSetvice}
+      />
       <CreateServiceModalContainer />
       <EditServiceModalContainer />
     </>

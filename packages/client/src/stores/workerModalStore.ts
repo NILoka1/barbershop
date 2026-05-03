@@ -1,4 +1,3 @@
-// src/stores/modalStore.ts
 import { create } from "zustand";
 import type { UpdateServiceInput } from "shared";
 
@@ -7,7 +6,6 @@ interface ModalStore {
   openCreateServiceModal: () => void;
   closeCreateServiceModal: () => void;
 
-  // Редактирование услуги
   editingService: UpdateServiceInput | null;
   isEditServiceOpened: boolean;
   openEditServiceModal: (service: UpdateServiceInput) => void;
