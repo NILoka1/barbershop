@@ -17,8 +17,6 @@ import {
 } from "@tabler/icons-react";
 import useServices from "./useServices";
 import { getCategoryLabel, type UpdateServiceInput } from "shared";
-import { EditServiceModalContainer } from "./modals/EditModalContainer";
-import { CreateServiceModalContainer } from "./modals/CreateModalContainer";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { CreateServiceModal } from "./modals/CreateServiceModal";
 import { EditServiceModal } from "./modals/EditServiceModal";
@@ -151,8 +149,6 @@ const ServicesPage = () => {
         onClose={editClose}
         service={editingSetvice}
       />
-      <CreateServiceModalContainer />
-      <EditServiceModalContainer />
     </>
   );
 };
