@@ -2,7 +2,7 @@ import { Stack, TextInput } from "@mantine/core";
 import React, { useCallback, useState } from "react";
 import { ShiftsList } from "./ShiftsList";
 import { ShiftsHeader } from "./ShiftsHeader";
-import { useDateModal } from "./DateModall";
+import { useDateModal } from "../../components/DateModall";
 import { trpc } from "src/main";
 import { IconSearch } from "@tabler/icons-react";
 import { useSearch } from "src/utils/useSearch";

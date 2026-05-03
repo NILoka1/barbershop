@@ -16,10 +16,11 @@ import {
   IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
-import {UpdateWorkersModalContainer} from "./modals/UpdateWorkersModalContainer";
-import { useModalStore } from "../../stores/workerModalStore";
-import { useMediaQuery } from "@mantine/hooks";
-import { CreateServiceModalContainer } from "./modals/AddWorkersModalConteiner";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { CreateServiceModal } from "../servicesPage/modals/CreateServiceModal";
+import UpdateWorkersModal from "./modals/UpdateWorkersModal";
+import { useState } from "react";
+import type { workersUpdateInput } from "shared";
 
 const WorkersPage = () => {
   const {
@@ -31,9 +32,24 @@ const WorkersPage = () => {
     setQuery,
     filtered,
   } = useWorkers();
-  const openEditModal = useModalStore((state) => state.openEditWorkerModal);
-  const openCreateModal = useModalStore((state) => state.openCreateWorkerModal);
+
+  const [
+    createModalOpened,
+    { open: createModalOpen, close: createModalClose },
+  ] = useDisclosure();
+  const [editModalOpened, { open: editModalOpen, close: editModalClose }] =
+    useDisclosure();
+
+  const [editingWorker, setEditingWorker] = useState<workersUpdateInput | null>(
+    null,
+  );
+
   const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const handleOpenCreateModal = (worker: workersUpdateInput) => {
+    editModalOpen();
+    setEditingWorker(worker);
+  };
 
   if (isLoading) {
     return (
@@ -55,7 +71,7 @@ const WorkersPage = () => {
     return (
       <Stack>
         <Text>Ещё нет ни одного работника</Text>
-        <Button onClick={openCreateModal}>Добавить работника</Button>
+        <Button onClick={createModalOpen}>Добавить работника</Button>
       </Stack>
     );
   }
@@ -75,9 +91,7 @@ const WorkersPage = () => {
             />
           )}
 
-          <Button onClick={openCreateModal}>
-            Добавить мастера
-          </Button>
+          <Button onClick={createModalOpen}>Добавить мастера</Button>
         </Flex>
         {isMobile && (
           <TextInput
@@ -109,7 +123,7 @@ const WorkersPage = () => {
                   <Table.Td>
                     <Flex gap="xs">
                       <Button
-                        onClick={() => openEditModal(worker)}
+                        onClick={() => handleOpenCreateModal(worker)}
                         variant="subtle"
                         size="xs"
                       >
@@ -133,8 +147,15 @@ const WorkersPage = () => {
           </Table>
         </Table.ScrollContainer>
       </Stack>
-      <CreateServiceModalContainer />
-      <UpdateWorkersModalContainer />
+      <CreateServiceModal
+        opened={createModalOpened}
+        onClose={createModalClose}
+      />
+      <UpdateWorkersModal
+        opened={editModalOpened}
+        onClose={editModalClose}
+        editingWorker={editingWorker}
+      />
     </>
   );
 };

@@ -18,8 +18,8 @@ export const ShiftsList = React.memo(
 
     return (
       <>
-        <Table.ScrollContainer minWidth={500}>
-          <Table striped highlightOnHover withTableBorder>
+        <Table.ScrollContainer w={"100%"} minWidth={500}>
+          <Table w={"100%"} striped highlightOnHover withTableBorder>
             <Table.Thead>
               <Table.Tr>
                 <Table.Th>Имя</Table.Th>

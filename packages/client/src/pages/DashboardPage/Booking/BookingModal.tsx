@@ -1,4 +1,5 @@
 import { Button, Modal, Select, Stack, TextInput } from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
 import { schemaResolver, useForm } from "@mantine/form";
 import dayjs from "dayjs";
 import React, { useEffect } from "react";
@@ -16,7 +17,7 @@ import { trpc } from "src/main";
 
 interface BookingModalProps {
   dayDatail: ShiftFromDB[];
-  date: string;
+  date?: string;
   modal: {
     type: "edit" | "create";
     item: BookingFromDB | null;
@@ -36,7 +37,7 @@ export const BookingModal = ({
       serviceId: "",
       shiftId: "",
       clientId: "",
-      startDate: date,
+      startDate: date ? date.split("T")[0] : dayjs().format("YYYY-MM-DD"),
       startTime: "12:00",
       endTime: "13:00",
       status: "PENDING",
@@ -45,15 +46,14 @@ export const BookingModal = ({
     validateInputOnBlur: true,
   });
 
+  const currentDate = form.values.startDate;
+
   const dateProps = {
-    startDate: dayjs(dayDatail[0]?.startTime)
+    startDate: dayjs(currentDate)
       .tz("Europe/Moscow")
       .startOf("day")
       .toISOString(),
-    endDate: dayjs(dayDatail[0]?.endTime)
-      .tz("Europe/Moscow")
-      .endOf("day")
-      .toISOString(),
+    endDate: dayjs(currentDate).tz("Europe/Moscow").endOf("day").toISOString(),
   };
 
   const CreateBooking = useCreateBooking(dateProps);
@@ -63,13 +63,19 @@ export const BookingModal = ({
   const { data: clients } = trpc.booking.getClients.useQuery();
 
   useEffect(() => {
+    if (date) {
+      form.setFieldValue("startDate", date.split("T")[0]);
+    }
+  }, [date]);
+
+  useEffect(() => {
     if (modal?.type === "edit" && modal.item) {
       form.setValues({
         id: modal.item.id,
         serviceId: modal.item.service.id,
         shiftId: modal.item.shift.id,
         clientId: modal.item.client.id,
-        startDate: date,
+        startDate: dayjs(modal.item.startTime).format("YYYY-MM-DD"),
         startTime: dayjs(modal.item.startTime).format("HH:mm"),
         endTime: dayjs(modal.item.endTime).format("HH:mm"),
         status: modal.item.status,
@@ -78,7 +84,7 @@ export const BookingModal = ({
   }, [modal]);
 
   const handleSubmit = (value: createBookingFormOutput) => {
-    const dateOnly = value.startDate.split("T")[0];
+    const dateOnly = value.startDate;
 
     const startTime = dayjs
       .tz(`${dateOnly}T${value.startTime}:00`, "Europe/Moscow")
@@ -144,6 +150,23 @@ export const BookingModal = ({
       >
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack>
+            {/* 👇 Поле выбора даты — показывается только если date не передан */}
+            {!date && (
+              <DatePickerInput
+                label="Дата"
+                value={
+                  form.values.startDate ? new Date(form.values.startDate) : null
+                }
+                onChange={(d) =>
+                  form.setFieldValue(
+                    "startDate",
+                    d ? dayjs(d).format("YYYY-MM-DD") : "",
+                  )
+                }
+                valueFormat="DD.MM.YYYY"
+              />
+            )}
+
             <Select
               label="Исполнитель"
               placeholder="Выберите исполнителя"
