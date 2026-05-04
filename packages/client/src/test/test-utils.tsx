@@ -22,7 +22,7 @@ const createTestQueryClient = () =>
     },
   });
 
-// Обертка со всеми провайдерами
+// eslint-disable-next-line react-refresh/only-export-components
 function AllTheProviders({ children }: { children: React.ReactNode }) {
   const queryClient = createTestQueryClient();
 

@@ -24,7 +24,7 @@ export const BookingPage = () => {
     confirmModal("Вы действительно хотите удалить эту услугу?", () =>
       deleteService.mutate({ id: id }),
     );
-  }, []);
+  }, [deleteService]);
 
   const openEditModal = useCallback((item: BookingFromDB) => {
     setModal({ type: "edit", item });

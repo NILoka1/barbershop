@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "pnpm --filter client test && pnpm --filter server test",
+    "lint": "pnpm --filter client lint",
+    "type-check": "pnpm --filter client exec tsc --noEmit",
     "prepare": "husky",
     "dev": "pnpm --filter server dev & pnpm --filter client dev"
   },

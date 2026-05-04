@@ -27,7 +27,7 @@ export const ShiftsPage = () => {
     confirmModal("Вы действительно хотите удалить эту услугу?", () =>
       deleteService.mutate({ id: id }),
     );
-  }, []);
+  }, [deleteService]);
 
   const openEditModal = useCallback((item: ShiftFromDB) => {
     setModal({ type: "edit", item });
