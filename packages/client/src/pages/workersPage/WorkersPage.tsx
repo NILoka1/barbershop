@@ -17,10 +17,10 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
-import { CreateServiceModal } from "../servicesPage/modals/CreateServiceModal";
 import UpdateWorkersModal from "./modals/UpdateWorkersModal";
 import { useState } from "react";
 import type { workersUpdateInput } from "shared";
+import AddWorkersModal from "./modals/AddWorkersModal";
 
 const WorkersPage = () => {
   const {
@@ -54,7 +54,7 @@ const WorkersPage = () => {
   if (isLoading) {
     return (
       <Flex justify="center" align="center" h={200}>
-        <Loader />
+        <Loader data-testid="WorkersLoader" />
       </Flex>
     );
   }
@@ -126,6 +126,7 @@ const WorkersPage = () => {
                         onClick={() => handleOpenCreateModal(worker)}
                         variant="subtle"
                         size="xs"
+                        aria-label="edit"
                       >
                         <IconEdit size={16} />
                       </Button>
@@ -136,6 +137,7 @@ const WorkersPage = () => {
                         variant="subtle"
                         color="red"
                         size="xs"
+                        aria-label="delete"
                       >
                         <IconTrash size={16} />
                       </Button>
@@ -147,15 +149,19 @@ const WorkersPage = () => {
           </Table>
         </Table.ScrollContainer>
       </Stack>
-      <CreateServiceModal
-        opened={createModalOpened}
-        onClose={createModalClose}
-      />
-      <UpdateWorkersModal
-        opened={editModalOpened}
-        onClose={editModalClose}
-        editingWorker={editingWorker}
-      />
+      {createModalOpened && (
+        <AddWorkersModal
+          opened={createModalOpened}
+          onClose={createModalClose}
+        />
+      )}
+      {editModalOpened && (
+        <UpdateWorkersModal
+          opened={editModalOpened}
+          onClose={editModalClose}
+          editingWorker={editingWorker}
+        />
+      )}
     </>
   );
 };

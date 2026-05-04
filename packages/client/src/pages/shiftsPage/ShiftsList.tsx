@@ -30,7 +30,7 @@ export const ShiftsList = React.memo(
             </Table.Thead>
             <Table.Tbody>
               {ShiftsData?.map((shift) => (
-                <Table.Tr>
+                <Table.Tr key={shift.id}>
                   <Table.Td>{shift.worker.name}</Table.Td>
                   <Table.Td>
                     {dayjs(shift.startTime).format("DD.MM.YYYY HH:mm")}
@@ -46,6 +46,7 @@ export const ShiftsList = React.memo(
                         }}
                         variant="subtle"
                         size="xs"
+                        aria-label="edit"
                       >
                         <IconEdit size={16} />
                       </Button>
@@ -54,6 +55,7 @@ export const ShiftsList = React.memo(
                         variant="subtle"
                         color="red"
                         size="xs"
+                        aria-label="delete"
                       >
                         <IconTrash size={16} />
                       </Button>
