@@ -1,26 +1,13 @@
-import {
-  Button,
-  Flex,
-  Stack,
-  Table,
-  Title,
-  Text,
-  Alert,
-  Loader,
-  TextInput,
-} from "@mantine/core";
+import { Button, Flex, Stack, Text, Alert, Loader } from "@mantine/core";
 import useWorkers from "./useWorkers";
-import {
-  IconAlertCircle,
-  IconEdit,
-  IconSearch,
-  IconTrash,
-} from "@tabler/icons-react";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { IconAlertCircle } from "@tabler/icons-react";
+import { useDisclosure } from "@mantine/hooks";
 import UpdateWorkersModal from "./modals/UpdateWorkersModal";
 import { useState } from "react";
 import type { workersUpdateInput } from "shared";
 import AddWorkersModal from "./modals/AddWorkersModal";
+import { WorkersHeader } from "./WorkersHeader";
+import { WorkersList } from "./WorkersList";
 
 const WorkersPage = () => {
   const {
@@ -43,8 +30,6 @@ const WorkersPage = () => {
   const [editingWorker, setEditingWorker] = useState<workersUpdateInput | null>(
     null,
   );
-
-  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const handleOpenCreateModal = (worker: workersUpdateInput) => {
     editModalOpen();
@@ -75,79 +60,20 @@ const WorkersPage = () => {
       </Stack>
     );
   }
+  
   return (
     <>
-      <Stack w={"100%"}>
-        <Flex gap={10} justify="space-between" w={"100%"} align="flex-start">
-          <Title order={2}>Мастера</Title>
-
-          {!isMobile && (
-            <TextInput
-              placeholder="Поиск по мастерам..."
-              leftSection={<IconSearch size={16} />}
-              value={query}
-              onChange={(e) => setQuery(e.currentTarget.value)}
-              style={{ width: 250 }}
-            />
-          )}
-
-          <Button onClick={createModalOpen}>Добавить мастера</Button>
-        </Flex>
-        {isMobile && (
-          <TextInput
-            placeholder="Поиск по мастерам..."
-            leftSection={<IconSearch size={16} />}
-            value={query}
-            onChange={(e) => setQuery(e.currentTarget.value)}
-            w={"100%"}
-          />
-        )}
-        <Table.ScrollContainer minWidth={500}>
-          <Table striped highlightOnHover withTableBorder>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>Имя</Table.Th>
-                <Table.Th>Почта</Table.Th>
-                <Table.Th>Телефон</Table.Th>
-                <Table.Th>Администрация</Table.Th>
-                <Table.Th>Действия</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {filtered.map((worker) => (
-                <Table.Tr key={worker.id}>
-                  <Table.Td>{worker.name}</Table.Td>
-                  <Table.Td>{worker.email}</Table.Td>
-                  <Table.Td>{worker.phone}</Table.Td>
-                  <Table.Td>{worker.isAdmin ? "Да" : "Нет"}</Table.Td>
-                  <Table.Td>
-                    <Flex gap="xs">
-                      <Button
-                        onClick={() => handleOpenCreateModal(worker)}
-                        variant="subtle"
-                        size="xs"
-                        aria-label="edit"
-                      >
-                        <IconEdit size={16} />
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          handleDelete(worker.id);
-                        }}
-                        variant="subtle"
-                        color="red"
-                        size="xs"
-                        aria-label="delete"
-                      >
-                        <IconTrash size={16} />
-                      </Button>
-                    </Flex>
-                  </Table.Td>
-                </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
-        </Table.ScrollContainer>
+      <Stack w="100%">
+        <WorkersHeader 
+          query={query} 
+          setQuery={setQuery} 
+          openCreateModal={createModalOpen} 
+        />
+        <WorkersList 
+          workers={filtered} 
+          handleDelete={handleDelete} 
+          openEditModal={handleOpenCreateModal} 
+        />
       </Stack>
       {createModalOpened && (
         <AddWorkersModal
