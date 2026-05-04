@@ -2,7 +2,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { MantineProvider } from "@mantine/core";
-import { ShiftsList } from "./ShiftsList";
+import { ShiftsList } from "../../pages/shiftsPage/ShiftsList";
 import type { ShiftFromDB } from "shared";
 
 // Mock dayjs

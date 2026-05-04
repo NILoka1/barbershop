@@ -2,7 +2,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { MantineProvider } from "@mantine/core";
-import { WorkersHeader } from "./WorkersHeader";
+import { WorkersHeader } from "../../pages/workersPage/WorkersHeader";
 import * as hooks from "@mantine/hooks";
 
 // Мокаем хук useMediaQuery

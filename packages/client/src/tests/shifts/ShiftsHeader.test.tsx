@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { vi, describe, it, expect } from "vitest";
 import { MantineProvider } from "@mantine/core";
-import { ShiftsHeader } from "./ShiftsHeader";
+import { ShiftsHeader } from "src/pages/shiftsPage/ShiftsHeader";
 
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(<MantineProvider>{ui}</MantineProvider>);

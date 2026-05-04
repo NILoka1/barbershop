@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import UpdateWorkersModal from "./UpdateWorkersModal";
+import UpdateWorkersModal from "../../pages/workersPage/modals/UpdateWorkersModal";
 
 // Мокаем зависимости
 vi.mock("src/api/workers/update", () => ({

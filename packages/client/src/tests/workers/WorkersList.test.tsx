@@ -2,7 +2,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { MantineProvider } from "@mantine/core";
-import { WorkersList } from "./WorkersList";
+import { WorkersList } from "../../pages/workersPage/WorkersList";
 import type { workersUpdateInput } from "shared";
 
 const mockWorkers: workersUpdateInput[] = [
