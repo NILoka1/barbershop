@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react";
 import { ShiftsList } from "./ShiftsList";
 import { ShiftsHeader } from "./ShiftsHeader";
 import { useDateModal } from "../../components/DateModall";
-import { trpc } from "src/main";
+import { trpc } from "src/api/client";
 import { IconSearch } from "@tabler/icons-react";
 import { useSearch } from "src/utils/useSearch";
 import { filterServices } from "src/utils/searchers/filterShifts";

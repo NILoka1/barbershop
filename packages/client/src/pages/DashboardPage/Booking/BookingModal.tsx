@@ -13,7 +13,7 @@ import {
 } from "shared";
 import { useCreateBooking } from "src/api/booking/create";
 import { useUpdateBooking } from "src/api/booking/update";
-import { trpc } from "src/main";
+import { trpc } from "src/api/client";
 
 interface BookingModalProps {
   dayDatail: ShiftFromDB[];

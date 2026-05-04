@@ -1,6 +1,5 @@
 import type { workersUpdateInput } from "shared";
-import { trpc } from "../../main";
-
+import { trpc } from "src/api/client";
 export function useUpdateWorker() {
   const utils = trpc.useUtils();
   return trpc.workers.update.useMutation({

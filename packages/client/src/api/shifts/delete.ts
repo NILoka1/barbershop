@@ -1,5 +1,4 @@
-import { trpc } from "src/main";
-
+import { trpc } from "src/api/client";
 export function useDeleteShift(dates: { startDate: string; endDate: string }) {
   const utils = trpc.useUtils();
 

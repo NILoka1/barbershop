@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { trpc } from "../../main";
+import { trpc } from "src/api/client";
 export function useLoginMutation() {
   const nav = useNavigate();
 

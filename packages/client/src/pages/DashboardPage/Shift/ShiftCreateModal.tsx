@@ -1,7 +1,7 @@
 import { Modal, Select, Button, Stack, TextInput } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import { trpc } from "src/main";
+import { trpc } from "src/api/client";
 import { useCreateShift } from "src/api/shifts/create";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";

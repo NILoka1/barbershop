@@ -1,4 +1,4 @@
-import { trpc } from "../../main";
+import { trpc } from "src/api/client";
 export function useCreateWorkers() {
   const utils = trpc.useUtils();
   return trpc.workers.register.useMutation({

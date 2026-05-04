@@ -5,7 +5,7 @@ import BookingList from "./BookingList";
 import { useDateModal } from "src/components/DateModall";
 import type { BookingFromDB } from "shared";
 import { BookingModal } from "../DashboardPage/Booking/BookingModal";
-import { trpc } from "src/main";
+import { trpc } from "src/api/client";
 import { useDeleteShift } from "src/api/shifts/delete";
 import { confirmModal } from "src/utils/confirmModals";
 

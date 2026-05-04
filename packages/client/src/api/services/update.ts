@@ -1,6 +1,5 @@
 import type { UpdateServiceInput } from "shared";
-import { trpc } from "../../main";
-
+import { trpc } from "src/api/client";
 
 
 export function useUpdateServices() {

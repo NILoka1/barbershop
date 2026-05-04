@@ -1,4 +1,4 @@
-import { trpc } from "../../main";
+import { trpc } from "src/api/client";
 export function useDeleteWorker() {
   const utils = trpc.useUtils();
   return trpc.workers.delete.useMutation({

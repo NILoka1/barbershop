@@ -1,5 +1,5 @@
 import { ActionIcon, Badge, Group, Paper, Text } from "@mantine/core";
-import { trpc } from "src/main";
+import { trpc } from "src/api/client";
 import type { BookingFromDB, ShiftFromDB } from "shared";
 import dayjs from "dayjs";
 import React from "react";

@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { useCallback, useMemo, useState } from "react";
 import type { ShiftFromDB } from "shared";
-import { trpc } from "src/main";
+import { trpc } from "src/api/client";
 
 export const useShiftsPage = () => {
   const [selected, setSelected] = useState<Date | null>(new Date());

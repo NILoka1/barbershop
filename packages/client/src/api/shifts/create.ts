@@ -1,4 +1,4 @@
-import { trpc } from "../../main";
+import { trpc } from "src/api/client";
 import type { ShiftFromDB } from "shared";
 
 export function useCreateShift() {

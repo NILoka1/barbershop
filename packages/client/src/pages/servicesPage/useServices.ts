@@ -1,4 +1,4 @@
-import { trpc } from "../../main";
+import { trpc } from "src/api/client";
 import { useDeleteServices } from "../../api/services/delete";
 import { confirmModal } from "src/utils/confirmModals";
 import { useSearch } from "src/utils/useSearch";

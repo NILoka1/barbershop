@@ -1,4 +1,4 @@
-import { trpc } from "../../main";
+import { trpc } from "src/api/client";
 
 export function useCreateBooking({startDate, endDate}: {startDate: string, endDate: string}) {
   const utils = trpc.useUtils();

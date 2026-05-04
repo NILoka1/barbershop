@@ -1,4 +1,4 @@
-import { trpc } from "src/main";
+import { trpc } from "src/api/client";
 
 export function useUpdateBooking({
   startDate,
