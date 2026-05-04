@@ -9,7 +9,6 @@ import {
   NumberInput,
 } from "@mantine/core";
 import { useForm, schemaResolver } from "@mantine/form";
-import { useEffect } from "react";
 import {
   categoryOptions,
   updateServiceSchema,
@@ -20,7 +19,7 @@ import { useUpdateServices } from "src/api/services/update";
 interface EditServiceModalProps {
   opened: boolean;
   onClose: () => void;
-  service: UpdateServiceInput | null;
+  service: UpdateServiceInput;
 }
 
 export function EditServiceModal({
@@ -31,23 +30,9 @@ export function EditServiceModal({
   const UpdateServices = useUpdateServices();
 
   const form = useForm<UpdateServiceInput>({
-    initialValues: service || {
-      id: "",
-      name: "",
-      description: null,
-      category: null,
-      duration: 0,
-      price: 0,
-      color: null,
-    },
+    initialValues: service,
     validate: schemaResolver(updateServiceSchema),
   });
-
-  useEffect(() => {
-    if (opened && service) {
-      form.setValues(service);
-    }
-  }, [service]);
 
   const handleSubmit = (values: UpdateServiceInput) => {
     UpdateServices.mutate(values);

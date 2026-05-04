@@ -2,12 +2,11 @@ import { Button, Checkbox, Flex, Modal, Stack, TextInput } from "@mantine/core";
 import { useForm, schemaResolver } from "@mantine/form";
 import { workersUpdate, type workersUpdateInput } from "shared";
 import { useUpdateWorker } from "src/api/workers/update";
-import { useEffect } from "react";
 
 interface UpdateWorkersModalProps {
   opened: boolean;
   onClose: () => void;
-  editingWorker: workersUpdateInput | null;
+  editingWorker: workersUpdateInput;
 }
 
 const UpdateWorkersModal = ({ opened, onClose, editingWorker }: UpdateWorkersModalProps) => {
@@ -19,21 +18,9 @@ const UpdateWorkersModal = ({ opened, onClose, editingWorker }: UpdateWorkersMod
   };
 
   const form = useForm<workersUpdateInput>({
-    initialValues: editingWorker || {
-      id: "",
-      name: "",
-      email: "",
-      phone: "",
-      isAdmin: false,
-    },
+    initialValues: editingWorker,
     validate: schemaResolver(workersUpdate),
   });
-
-  useEffect(() => {
-    if (editingWorker) {
-      form.setValues(editingWorker);
-    }
-  }, [editingWorker]);
 
 
   return (

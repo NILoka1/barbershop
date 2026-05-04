@@ -1,26 +1,14 @@
-import {
-  Flex,
-  Table,
-  Loader,
-  Alert,
-  Title,
-  Stack,
-  Button,
-  Text,
-  TextInput,
-} from "@mantine/core";
-import {
-  IconAlertCircle,
-  IconEdit,
-  IconSearch,
-  IconTrash,
-} from "@tabler/icons-react";
+import { Flex, Alert, Stack, Button, Text, Loader } from "@mantine/core";
+import { IconAlertCircle } from "@tabler/icons-react";
 import useServices from "./useServices";
-import { getCategoryLabel, type UpdateServiceInput } from "shared";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { type UpdateServiceInput } from "shared";
+import { useDisclosure } from "@mantine/hooks";
 import { CreateServiceModal } from "./modals/CreateServiceModal";
 import { EditServiceModal } from "./modals/EditServiceModal";
 import { useState } from "react";
+import { ServicesHeader } from "./ServicesHeader";
+import { ServicesList } from "./ServicesList";
+
 const ServicesPage = () => {
   const {
     servicesList,
@@ -37,8 +25,6 @@ const ServicesPage = () => {
   const [editOpened, { open: editOpen, close: editClose }] = useDisclosure();
   const [editingSetvice, setEditingService] =
     useState<UpdateServiceInput | null>(null);
-
-  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const handleOpenEdit = (service: UpdateServiceInput) => {
     setEditingService(service);
@@ -73,82 +59,27 @@ const ServicesPage = () => {
   return (
     <>
       <Stack w={"100%"}>
-        <Flex justify="space-between" align="center">
-          <Title order={2}>Услуги</Title>
-
-          {!isMobile && (
-            <TextInput
-              placeholder="Поиск по услугам..."
-              leftSection={<IconSearch size={16} />}
-              value={query}
-              onChange={(e) => setQuery(e.currentTarget.value)}
-              style={{ width: 250 }}
-            />
-          )}
-
-          <Button onClick={createOpen}>Добавить услугу</Button>
-        </Flex>
-        {isMobile && (
-          <TextInput
-            placeholder="Поиск по услугам..."
-            leftSection={<IconSearch size={16} />}
-            value={query}
-            onChange={(e) => setQuery(e.currentTarget.value)}
-            w={"100%"}
-          />
-        )}
-
-        <Table.ScrollContainer minWidth={500}>
-          <Table striped highlightOnHover withTableBorder>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>Название</Table.Th>
-                <Table.Th>Категория</Table.Th>
-                <Table.Th>Длительность</Table.Th>
-                <Table.Th>Цена</Table.Th>
-                <Table.Th>Действия</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {filtered.map((service) => (
-                <Table.Tr key={service.id}>
-                  <Table.Td>{service.name}</Table.Td>
-                  <Table.Td>{getCategoryLabel(service.category)}</Table.Td>
-                  <Table.Td>{service.duration} мин</Table.Td>
-                  <Table.Td>{String(service.price)} ₽</Table.Td>
-                  <Table.Td>
-                    <Flex gap="xs">
-                      <Button
-                        onClick={() => {
-                          handleOpenEdit(service);
-                        }}
-                        variant="subtle"
-                        size="xs"
-                      >
-                        <IconEdit size={16} />
-                      </Button>
-                      <Button
-                        onClick={() => handleDelete(service.id)}
-                        variant="subtle"
-                        color="red"
-                        size="xs"
-                      >
-                        <IconTrash size={16} />
-                      </Button>
-                    </Flex>
-                  </Table.Td>
-                </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
-        </Table.ScrollContainer>
+        <ServicesHeader
+          query={query}
+          setQuery={setQuery}
+          openCreateModal={createOpen}
+        />
+        <ServicesList
+          services={filtered}
+          handleDelete={handleDelete}
+          openEditModal={handleOpenEdit}
+        />
       </Stack>
-      <CreateServiceModal opened={createOpened} onClose={createClose} />
-      <EditServiceModal
-        opened={editOpened}
-        onClose={editClose}
-        service={editingSetvice}
-      />
+      {createOpened && (
+        <CreateServiceModal opened={createOpened} onClose={createClose} />
+      )}
+      {editOpened && editingSetvice && (
+        <EditServiceModal
+          opened={editOpened}
+          onClose={editClose}
+          service={editingSetvice}
+        />
+      )}
     </>
   );
 };

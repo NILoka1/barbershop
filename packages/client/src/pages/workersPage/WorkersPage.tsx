@@ -81,7 +81,7 @@ const WorkersPage = () => {
           onClose={createModalClose}
         />
       )}
-      {editModalOpened && (
+      {editModalOpened && editingWorker && (
         <UpdateWorkersModal
           opened={editModalOpened}
           onClose={editModalClose}
