@@ -19,14 +19,30 @@ export const workersRouter = router({
   register: adminProcedure
     .input(workersRegistrate)
     .mutation(async ({ ctx, input }) => {
-      const existing = await ctx.prisma.worker.findUnique({
+      const emailExisting = await ctx.prisma.worker.findUnique({
         where: { email: input.email },
       });
 
-      if (existing) {
+      const phoneExisting = input.phone
+        ? await ctx.prisma.worker.findFirst({
+            where: { phone: input.phone },
+          })
+        : null;
+
+      const fieldErrors: Record<string, string> = {};
+
+      if (emailExisting) {
+        fieldErrors.email = "Пользователь с таким email уже существует";
+      }
+
+      if (phoneExisting) {
+        fieldErrors.phone = "Пользователь с таким телефоном уже существует";
+      }
+
+      if (Object.keys(fieldErrors).length > 0) {
         throw new TRPCError({
           code: "CONFLICT",
-          message: "Пользователь с таким email уже существует",
+          message: JSON.stringify(fieldErrors), 
         });
       }
 

@@ -3,8 +3,13 @@ import { useForm, schemaResolver } from "@mantine/form";
 import { workersRegistrate, type workersRegistrateInput } from "shared";
 import { useCreateWorkers } from "src/api/workers/create";
 
-const AddWorkersModal = ({opened, onClose}: {opened: boolean, onClose: () => void}) => {
-
+const AddWorkersModal = ({
+  opened,
+  onClose,
+}: {
+  opened: boolean;
+  onClose: () => void;
+}) => {
   const CreateWorkers = useCreateWorkers();
 
   const handleCreate = (values: workersRegistrateInput) => {
@@ -14,7 +19,13 @@ const AddWorkersModal = ({opened, onClose}: {opened: boolean, onClose: () => voi
         form.reset();
       },
       onError: (error) => {
-        form.setErrors({ email: error.message });
+        try {
+          const fieldErrors = JSON.parse(error.message);
+
+          form.setErrors(fieldErrors);
+        } catch {
+          form.setErrors({ email: error.message });
+        }
       },
     });
   };
