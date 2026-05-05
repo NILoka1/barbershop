@@ -70,22 +70,27 @@ export const DashboardPage = () => {
             onEdit={openEditModal}
             onCreate={openCreateModal}
             onOpenBookingModal={openBookingModal}
-            onOpenEditBookingModal ={openEditBookingModal}
+            onOpenEditBookingModal={openEditBookingModal}
           />
         </Flex>
       </Flex>
-      <ShiftCreateModal
-        currentMonth={currentMonth}
-        date={dayjs(selected).format("YYYY-MM-DD")}
-        modal={modal}
-        close={closeModal}
-      />
-      <BookingModal
-        dayDatail={dayDetail}
-        date={dayjs(selected).format("YYYY-MM-DD")}
-        modal={BookingModalData}
-        close={closeBookingModal}
-      />
+      {modal && (
+        <ShiftCreateModal
+          currentMonth={currentMonth}
+          date={dayjs(selected).format("YYYY-MM-DD")}
+          modal={modal}
+          close={closeModal}
+        />
+      )}
+
+      {BookingModalData && (
+        <BookingModal
+          dayDatail={dayDetail}
+          date={dayjs(selected).format("YYYY-MM-DD")}
+          modal={BookingModalData}
+          close={closeBookingModal}
+        />
+      )}
     </>
   );
 };

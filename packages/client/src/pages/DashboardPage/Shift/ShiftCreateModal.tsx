@@ -1,13 +1,12 @@
 import { Modal, Select, Button, Stack, TextInput } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
-import { useForm } from "@mantine/form";
+import { schemaResolver, useForm } from "@mantine/form";
 import { trpc } from "src/api/client";
 import { useCreateShift } from "src/api/shifts/create";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { useEffect } from "react";
-import type { ShiftFromDB } from "shared";
+import { shiftFormSchema, type ShiftFormInput, type ShiftFromDB } from "shared";
 import { useUpdateShift } from "src/api/shifts/update";
 
 dayjs.extend(utc);
@@ -18,7 +17,7 @@ interface ShiftCreateModalProps {
   modal: {
     type: "edit" | "create";
     item: ShiftFromDB | null;
-  } | null;
+  };
   close: () => void;
   currentMonth: {
     startDate: string;
@@ -35,33 +34,25 @@ export const ShiftCreateModal = ({
   const createShift = useCreateShift();
   const editingShift = useUpdateShift(currentMonth);
 
+  console.log(date);
   const { data: workers } = trpc.workers.getAll.useQuery();
 
-  const form = useForm({
+  const form = useForm<ShiftFormInput>({
     initialValues: {
-      worker: "",
-      startDate: date ? date.split("T")[0] : dayjs().format("YYYY-MM-DD"),
-      startTime: "09:00",
-      endTime: "18:00",
+      worker: modal.item?.worker.id || "",
+      startDate: date
+        ? date.split("T")[0]
+        : dayjs(modal.item?.startTime).format("YYYY-MM-DD") ||
+          dayjs().format("YYYY-MM-DD"),
+      startTime: modal.item
+        ? dayjs(modal.item.startTime).format("HH:mm")
+        : "09:00",
+      endTime: modal.item
+        ? dayjs(modal.item?.endTime).format("HH:mm")
+        : "18:00",
     },
+    validate: schemaResolver(shiftFormSchema),
   });
-
-  useEffect(() => {
-    if (date) {
-      form.setFieldValue("startDate", date.split("T")[0]);
-    }
-  }, [date]);
-
-  useEffect(() => {
-    if (modal?.type === "edit" && modal.item) {
-      form.setValues({
-        worker: modal.item.worker.id,
-        startDate: dayjs(modal.item.startTime).format("YYYY-MM-DD"),
-        startTime: dayjs(modal.item.startTime).format("HH:mm"),
-        endTime: dayjs(modal.item.endTime).format("HH:mm"),
-      });
-    }
-  }, [modal]);
 
   const handleSubmit = (values: typeof form.values) => {
     const dateOnly = values.startDate;
