@@ -20,9 +20,7 @@ const AddWorkersModal = ({
       },
       onError: (error) => {
         try {
-          const fieldErrors = JSON.parse(error.message);
-
-          form.setErrors(fieldErrors);
+          form.setErrors(JSON.parse(error.message));
         } catch {
           form.setErrors({ email: error.message });
         }

@@ -9,19 +9,32 @@ interface UpdateWorkersModalProps {
   editingWorker: workersUpdateInput;
 }
 
-const UpdateWorkersModal = ({ opened, onClose, editingWorker }: UpdateWorkersModalProps) => {
-
+const UpdateWorkersModal = ({
+  opened,
+  onClose,
+  editingWorker,
+}: UpdateWorkersModalProps) => {
   const UpdateWorker = useUpdateWorker();
   const handleUpdate = (values: workersUpdateInput) => {
-    UpdateWorker.mutate(values);
-    onClose();
+    UpdateWorker.mutate(values, {
+      onSuccess: () => {
+        onClose();
+        form.reset();
+      },
+      onError: (error) => {
+        try {
+          form.setErrors(JSON.parse(error.message));
+        } catch {
+          form.setErrors({ email: error.message });
+        }
+      },
+    });
   };
 
   const form = useForm<workersUpdateInput>({
     initialValues: editingWorker,
     validate: schemaResolver(workersUpdate),
   });
-
 
   return (
     <Modal

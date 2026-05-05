@@ -3,6 +3,41 @@ import { adminProcedure, protectedProcedure, router } from "../trpc";
 import { workersRegistrate, workersUpdate } from "shared";
 import bcrypt from "bcryptjs";
 import z from "zod";
+import { prisma } from "../db/prisma";
+
+const checkExisting = async (
+  email: string,
+  phone?: string | null,
+  execludeID?: string,
+) => {
+  const emailExisting = await prisma.worker.findFirst({
+    where: { email: email, ...(execludeID && { id: { not: execludeID } }) },
+  });
+
+  const phoneExisting = phone
+    ? await prisma.worker.findFirst({
+        where: { phone: phone, ...(execludeID && { id: { not: execludeID } }) },
+      })
+    : null;
+
+  const fieldErrors: Record<string, string> = {};
+
+  if (emailExisting) {
+    fieldErrors.email = "Пользователь с таким email уже существует";
+  }
+
+  if (phoneExisting) {
+    fieldErrors.phone = "Пользователь с таким телефоном уже существует";
+  }
+
+  if (Object.keys(fieldErrors).length > 0) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: JSON.stringify(fieldErrors),
+    });
+  }
+};
+
 export const workersRouter = router({
   getAll: protectedProcedure.query(async ({ ctx }) => {
     return ctx.prisma.worker.findMany({
@@ -19,32 +54,7 @@ export const workersRouter = router({
   register: adminProcedure
     .input(workersRegistrate)
     .mutation(async ({ ctx, input }) => {
-      const emailExisting = await ctx.prisma.worker.findUnique({
-        where: { email: input.email },
-      });
-
-      const phoneExisting = input.phone
-        ? await ctx.prisma.worker.findFirst({
-            where: { phone: input.phone },
-          })
-        : null;
-
-      const fieldErrors: Record<string, string> = {};
-
-      if (emailExisting) {
-        fieldErrors.email = "Пользователь с таким email уже существует";
-      }
-
-      if (phoneExisting) {
-        fieldErrors.phone = "Пользователь с таким телефоном уже существует";
-      }
-
-      if (Object.keys(fieldErrors).length > 0) {
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: JSON.stringify(fieldErrors), 
-        });
-      }
+      await checkExisting(input.email, input.phone);
 
       const hashedPassword = await bcrypt.hash(input.password, 10);
 
@@ -64,6 +74,7 @@ export const workersRouter = router({
     .input(workersUpdate)
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
+      await checkExisting(data.email, data.phone, id);
       return ctx.prisma.worker.update({
         where: { id },
         data,

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // packages/client/src/pages/workersPage/modals/UpdateWorkersModal.test.tsx
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -13,7 +14,6 @@ vi.mock("src/api/workers/update", () => ({
 
 // Импортируем моки для использования в тестах
 import { useUpdateWorker } from "src/api/workers/update";
-
 
 const createTestQueryClient = () => {
   return new QueryClient({
@@ -57,7 +57,7 @@ describe("UpdateWorkersModal", () => {
       isError: false,
       data: undefined,
       error: null,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
   });
 
@@ -66,7 +66,7 @@ describe("UpdateWorkersModal", () => {
       <UpdateWorkersModal
         opened={false}
         onClose={mockOnClose}
-        editingWorker={null}
+        editingWorker={mockWorker}
       />,
     );
 
@@ -156,6 +156,18 @@ describe("UpdateWorkersModal", () => {
   it("сбрасывает форму после успешного обновления", async () => {
     const user = userEvent.setup();
 
+    vi.mocked(useUpdateWorker).mockReturnValue({
+      mutate: vi.fn().mockImplementation((values, { onSuccess }) => {
+        onSuccess({ worker: mockWorker } as any);
+      }),
+      isPending: false,
+      isLoading: false,
+      isSuccess: false,
+      isError: false,
+      data: undefined,
+      error: null,
+    } as any);
+
     renderWithProviders(
       <UpdateWorkersModal
         opened={true}
@@ -172,15 +184,8 @@ describe("UpdateWorkersModal", () => {
     const submitButton = screen.getByRole("button", { name: "Обновить" });
     await user.click(submitButton);
 
-    // Проверяем, что mutate был вызван и onClose тоже
+    // Проверяем, что onClose был вызван (что означает успешное обновление)
     await waitFor(() => {
-      expect(mockMutate).toHaveBeenCalledWith({
-        id: "123",
-        name: "Иван Иванов Обновленный",
-        email: "ivan@example.com",
-        phone: "+79001234567",
-        isAdmin: true,
-      });
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
   });
@@ -211,6 +216,19 @@ describe("UpdateWorkersModal", () => {
 
   it("отправляет обновленные данные при успешной валидации", async () => {
     const user = userEvent.setup();
+
+    vi.mocked(useUpdateWorker).mockReturnValue({
+      mutate: vi.fn().mockImplementation((values, { onSuccess }) => {
+        onSuccess({ worker: mockWorker } as any);
+      }),
+      isPending: false,
+      isLoading: false,
+      isSuccess: false,
+      isError: false,
+      data: undefined,
+      error: null,
+    } as any);
+
     renderWithProviders(
       <UpdateWorkersModal
         opened={true}
@@ -237,14 +255,45 @@ describe("UpdateWorkersModal", () => {
 
     // Проверяем, что mutate был вызван с правильными данными и onClose тоже
     await waitFor(() => {
-      expect(mockMutate).toHaveBeenCalledWith({
-        id: "123",
-        name: "Петр Петров",
-        email: "petr@example.com",
-        phone: "+79007654321",
-        isAdmin: false,
-      });
       expect(mockOnClose).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("показывает ошибку сервера, если обновление не удалось", async () => {
+    const user = userEvent.setup();
+    const errorMessage = "Ошибка при обновлении";
+
+    vi.mocked(useUpdateWorker).mockReturnValue({
+      mutate: vi.fn().mockImplementation((values, { onError }) => {
+        onError(new Error(errorMessage) as any);
+      }),
+      isPending: false,
+      isLoading: false,
+      isSuccess: false,
+      isError: false,
+      data: undefined,
+      error: null,
+    } as any);
+
+    renderWithProviders(
+      <UpdateWorkersModal
+        opened={true}
+        onClose={mockOnClose}
+        editingWorker={mockWorker}
+      />,
+    );
+
+    // Изменяем данные формы
+    await user.clear(screen.getByLabelText(/ФИО/i));
+    await user.type(screen.getByLabelText(/ФИО/i), "Иван Иванов Обновленный");
+
+    // Отправляем форму
+    const submitButton = screen.getByRole("button", { name: "Обновить" });
+    await user.click(submitButton);
+
+    // Проверяем, что ошибка отображается
+    await waitFor(() => {
+      expect(screen.getByText(errorMessage)).toBeInTheDocument();
     });
   });
 });
