@@ -2,6 +2,47 @@ import { TRPCError } from "@trpc/server";
 import { protectedProcedure, router } from "../trpc";
 import { addShift, deleteShift, shiftsInDate, shiftsUpdate } from "shared";
 import dayjs from "dayjs";
+import { prisma } from "../db/prisma";
+
+const checkOverlap = async (
+  startDate: string,
+  endDate: string,
+  workerId: string,
+  excludeId?: string, // 👈 Параметр для исключения текущей смены
+) => {
+  const dayStart = dayjs(startDate).startOf("day").toDate();
+  const dayEnd = dayjs(startDate).endOf("day").toDate();
+
+  return prisma.shift.findFirst({
+    where: {
+      workerId: workerId,
+      ...(excludeId && { id: { not: excludeId } }), // 👈 Исключаем себя
+      AND: [
+        { startTime: { gte: dayStart, lte: dayEnd } },
+        {
+          OR: [
+            {
+              startTime: { lte: new Date(startDate) },
+              endTime: { gt: new Date(startDate) },
+            },
+            {
+              startTime: { lt: new Date(endDate) },
+              endTime: { gte: new Date(endDate) },
+            },
+            {
+              startTime: { gte: new Date(startDate) },
+              endTime: { lte: new Date(endDate) },
+            },
+            {
+              startTime: { lte: new Date(startDate) },
+              endTime: { gte: new Date(endDate) },
+            },
+          ],
+        },
+      ],
+    },
+  });
+};
 
 export const shiftsRouter = router({
   getInDateRange: protectedProcedure
@@ -42,40 +83,7 @@ export const shiftsRouter = router({
         fieldErrors.endDate =
           "Время окончания должно быть после времени начала";
       }
-
-      const dayStart = dayjs(startDate).startOf("day").toDate();
-      const dayEnd = dayjs(startDate).endOf("day").toDate();
-
-      const overlapping = await ctx.prisma.shift.findFirst({
-        where: {
-          workerId: worker,
-          AND: [
-            { startTime: { gte: dayStart, lte: dayEnd } },
-            {
-              OR: [
-                {
-                  startTime: { lte: new Date(startDate) },
-                  endTime: { gt: new Date(startDate) },
-                },
-                {
-                  startTime: { lt: new Date(endDate) },
-                  endTime: { gte: new Date(endDate) },
-                },
-                {
-                  startTime: { gte: new Date(startDate) },
-                  endTime: { lte: new Date(endDate) },
-                },
-                {
-                  startTime: { lte: new Date(startDate) },
-                  endTime: { gte: new Date(endDate) },
-                },
-              ],
-            },
-          ],
-        },
-      });
-
-      if (overlapping) {
+      if (await checkOverlap(startDate, endDate, worker)) {
         fieldErrors.startTime = "Смена пересекается с существующей";
       }
 
@@ -105,6 +113,43 @@ export const shiftsRouter = router({
     .input(shiftsUpdate)
     .mutation(async ({ ctx, input }) => {
       const { id, startDate, endDate } = input;
+
+      const fieldErrors: Record<string, string> = {};
+
+      if (new Date(startDate) > new Date(endDate)) {
+        fieldErrors.endDate =
+          "Время окончания должно быть после времени начала";
+      }
+
+      const currentShift = await ctx.prisma.shift.findUnique({
+        where: { id },
+      });
+
+      if (!currentShift) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Смена не найдена",
+        });
+      }
+
+      const overlapping = await checkOverlap(
+        startDate,
+        endDate,
+        currentShift.workerId,
+        id,
+      );
+
+      if (overlapping) {
+        fieldErrors.startTime = "Смена пересекается с существующей";
+      }
+
+      if (Object.keys(fieldErrors).length > 0) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: JSON.stringify(fieldErrors),
+        });
+      }
+
       return ctx.prisma.shift.update({
         where: { id: id },
         data: {

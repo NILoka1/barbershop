@@ -75,6 +75,7 @@ export const ShiftCreateModal = ({
           },
           onError: (error) => {
             try {
+              console.log(error);
               form.setErrors(JSON.parse(error.message));
             } catch {
               form.setErrors({ email: error.message });
