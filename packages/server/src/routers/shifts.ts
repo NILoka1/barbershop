@@ -76,7 +76,7 @@ export const shiftsRouter = router({
       });
 
       if (overlapping) {
-        fieldErrors.startDate = "Смена пересекается с существующей";
+        fieldErrors.startTime = "Смена пересекается с существующей";
       }
 
       if (Object.keys(fieldErrors).length > 0) {

@@ -73,6 +73,13 @@ export const ShiftCreateModal = ({
             close();
             form.reset();
           },
+          onError: (error) => {
+            try {
+              form.setErrors(JSON.parse(error.message));
+            } catch {
+              form.setErrors({ email: error.message });
+            }
+          },
         },
       );
     }
@@ -82,6 +89,13 @@ export const ShiftCreateModal = ({
         onSuccess: () => {
           close();
           form.reset();
+        },
+        onError: (error) => {
+          try {
+            form.setErrors(JSON.parse(error.message));
+          } catch {
+            form.setErrors({ worker: error.message });
+          }
         },
       },
     );
