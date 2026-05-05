@@ -1,5 +1,7 @@
+import { TRPCError } from "@trpc/server";
 import { protectedProcedure, router } from "../trpc";
 import { addShift, deleteShift, shiftsInDate, shiftsUpdate } from "shared";
+import dayjs from "dayjs";
 
 export const shiftsRouter = router({
   getInDateRange: protectedProcedure
@@ -34,6 +36,56 @@ export const shiftsRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { startDate, endDate, worker } = input;
 
+      const fieldErrors: Record<string, string> = {};
+
+      if (new Date(startDate) > new Date(endDate)) {
+        fieldErrors.endDate =
+          "Время окончания должно быть после времени начала";
+      }
+
+      const dayStart = dayjs(startDate).startOf("day").toDate();
+      const dayEnd = dayjs(startDate).endOf("day").toDate();
+
+      const overlapping = await ctx.prisma.shift.findFirst({
+        where: {
+          workerId: worker,
+          AND: [
+            { startTime: { gte: dayStart, lte: dayEnd } },
+            {
+              OR: [
+                {
+                  startTime: { lte: new Date(startDate) },
+                  endTime: { gt: new Date(startDate) },
+                },
+                {
+                  startTime: { lt: new Date(endDate) },
+                  endTime: { gte: new Date(endDate) },
+                },
+                {
+                  startTime: { gte: new Date(startDate) },
+                  endTime: { lte: new Date(endDate) },
+                },
+                {
+                  startTime: { lte: new Date(startDate) },
+                  endTime: { gte: new Date(endDate) },
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      if (overlapping) {
+        fieldErrors.startDate = "Смена пересекается с существующей";
+      }
+
+      if (Object.keys(fieldErrors).length > 0) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: JSON.stringify(fieldErrors),
+        });
+      }
+
       return ctx.prisma.shift.create({
         data: {
           startTime: new Date(startDate),
@@ -58,7 +110,7 @@ export const shiftsRouter = router({
         data: {
           startTime: new Date(startDate),
           endTime: new Date(endDate),
-        }
+        },
       });
     }),
 });

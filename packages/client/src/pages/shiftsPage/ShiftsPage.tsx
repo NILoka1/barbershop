@@ -23,11 +23,14 @@ export const ShiftsPage = () => {
   } | null>(null);
 
   const deleteService = useDeleteShift(getDateRange());
-  const handleDelete = useCallback(async (id: string) => {
-    confirmModal("Вы действительно хотите удалить эту услугу?", () =>
-      deleteService.mutate({ id: id }),
-    );
-  }, [deleteService]);
+  const handleDelete = useCallback(
+    async (id: string) => {
+      confirmModal("Вы действительно хотите удалить эту услугу?", () =>
+        deleteService.mutate({ id: id }),
+      );
+    },
+    [deleteService],
+  );
 
   const openEditModal = useCallback((item: ShiftFromDB) => {
     setModal({ type: "edit", item });
@@ -56,13 +59,19 @@ export const ShiftsPage = () => {
           onChange={(e) => setQuery(e.currentTarget.value)}
           w={"100%"}
         />
-        <ShiftsList ShiftsData={filtered} openEditModal={openEditModal} handleDelete={handleDelete} />
+        <ShiftsList
+          ShiftsData={filtered}
+          openEditModal={openEditModal}
+          handleDelete={handleDelete}
+        />
       </Stack>
-      <ShiftCreateModal
-        modal={modal}
-        close={closeModal}
-        currentMonth={getDateRange()}
-      />
+      {modal && (
+        <ShiftCreateModal
+          modal={modal}
+          close={closeModal}
+          currentMonth={getDateRange()}
+        />
+      )}
     </>
   );
 };
