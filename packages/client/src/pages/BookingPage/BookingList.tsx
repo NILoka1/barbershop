@@ -1,4 +1,4 @@
-import { Button, Flex, Table } from "@mantine/core";
+import { Button, Flex, Table, Text } from "@mantine/core";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import React, { memo } from "react";
@@ -15,6 +15,10 @@ export default memo(function BookingList({
   openEditModal,
   handleDelete,
 }: BookingListProps) {
+  if (!BookingData || BookingData.length === 0) {
+    return <Text>Нет бронирований за выбранный период</Text>;
+  }
+
   return (
     <>
       <Table.ScrollContainer w={"100%"} minWidth={500}>
@@ -30,7 +34,7 @@ export default memo(function BookingList({
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {BookingData?.map((booking) => (
+            {BookingData.map((booking) => (
               <Table.Tr>
                 <Table.Td>{booking.shift.worker.name}</Table.Td>
                 <Table.Td>{booking.client.name}</Table.Td>
