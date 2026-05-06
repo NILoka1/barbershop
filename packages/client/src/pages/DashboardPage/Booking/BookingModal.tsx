@@ -63,7 +63,6 @@ export const BookingModal = ({
   const { data: clients } = trpc.booking.getClients.useQuery();
 
   const handleSubmit = (value: createBookingFormOutput) => {
-
     const startTime = dayjs
       .tz(`${value.startDate}T${value.startTime}:00`, "Europe/Moscow")
       .toISOString();

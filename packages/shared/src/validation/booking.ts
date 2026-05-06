@@ -8,16 +8,28 @@ export const getBookingInDayProps = z.object({
 
 export type GetBookingInDayProps = z.infer<typeof getBookingInDayProps>;
 
-export const createBookingForm = z.object({
-  id: z.string(),
-  serviceId: z.string().min(1, "Выберите услугу"),
-  shiftId: z.string().min(1, "Выберите смену"),
-  clientId: z.string().min(1, "Выберите клиента"),
-  startDate: z.string().date(),
-  startTime: z.string(),
-  endTime: z.string(),
-  status: z.string(),
-});
+export const createBookingForm = z
+  .object({
+    id: z.string(),
+    serviceId: z.string().min(1, "Выберите услугу"),
+    shiftId: z.string().min(1, "Выберите смену"),
+    clientId: z.string().min(1, "Выберите клиента"),
+    startDate: z.string().date(),
+    startTime: z.string(),
+    endTime: z.string(),
+    status: z.string(),
+  })
+  .refine(
+    (data) => {
+      const start = `${data.startDate}T${data.startTime}:00`;
+      const end = `${data.startDate}T${data.endTime}:00`;
+      return new Date(start) < new Date(end);
+    },
+    {
+      path: ["endTime"],
+      message: "Время окончания должно быть позже времени начала",
+    },
+  );
 
 export type createBookingFormOutput = z.infer<typeof createBookingForm>;
 
