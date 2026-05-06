@@ -34,7 +34,6 @@ export const ShiftCreateModal = ({
   const createShift = useCreateShift();
   const editingShift = useUpdateShift(currentMonth);
 
-  console.log(date);
   const { data: workers } = trpc.workers.getAll.useQuery();
 
   const form = useForm<ShiftFormInput>({
@@ -75,7 +74,6 @@ export const ShiftCreateModal = ({
           },
           onError: (error) => {
             try {
-              console.log(error);
               form.setErrors(JSON.parse(error.message));
             } catch {
               form.setErrors({ email: error.message });
@@ -107,6 +105,7 @@ export const ShiftCreateModal = ({
       value: w.id,
       label: w.name,
     })) ?? [];
+
 
   return (
     <Modal

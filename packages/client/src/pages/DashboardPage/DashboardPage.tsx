@@ -45,7 +45,6 @@ export const DashboardPage = () => {
 
   const openEditBookingModal = useCallback((item: BookingFromDB) => {
     setBookingModal({ type: "edit", item });
-    console.log(item);
   }, []);
 
   const closeBookingModal = useCallback(() => {
@@ -85,6 +84,7 @@ export const DashboardPage = () => {
 
       {BookingModalData && (
         <BookingModal
+          dateRange={currentMonth}
           dayDatail={dayDetail}
           date={dayjs(selected).format("YYYY-MM-DD")}
           modal={BookingModalData}

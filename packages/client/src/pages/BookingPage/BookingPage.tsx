@@ -20,11 +20,14 @@ export const BookingPage = () => {
   const dayDatail = trpc.shifts.getInDateRange.useQuery(getDateRange()).data;
 
   const deleteService = useDeleteShift(getDateRange());
-  const handleDelete = useCallback(async (id: string) => {
-    confirmModal("Вы действительно хотите удалить эту услугу?", () =>
-      deleteService.mutate({ id: id }),
-    );
-  }, [deleteService]);
+  const handleDelete = useCallback(
+    async (id: string) => {
+      confirmModal("Вы действительно хотите удалить эту услугу?", () =>
+        deleteService.mutate({ id: id }),
+      );
+    },
+    [deleteService],
+  );
 
   const openEditModal = useCallback((item: BookingFromDB) => {
     setModal({ type: "edit", item });
@@ -55,7 +58,14 @@ export const BookingPage = () => {
           handleDelete={handleDelete}
         />
       </Stack>
-      <BookingModal modal={modal} close={closeModal} dayDatail={dayDatail} />
+      {modal && (
+        <BookingModal
+          dateRange={getDateRange()}
+          modal={modal}
+          close={closeModal}
+          dayDatail={dayDatail}
+        />
+      )}
     </>
   );
 };

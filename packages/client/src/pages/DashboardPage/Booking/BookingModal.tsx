@@ -2,7 +2,6 @@ import { Button, Modal, Select, Stack, TextInput } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { schemaResolver, useForm } from "@mantine/form";
 import dayjs from "dayjs";
-import React, { useEffect } from "react";
 import {
   BookingStatus,
   BookingStatusLabels,
@@ -16,16 +15,21 @@ import { useUpdateBooking } from "src/api/booking/update";
 import { trpc } from "src/api/client";
 
 interface BookingModalProps {
+  dateRange: {
+    startDate: string;
+    endDate: string;
+  };
   dayDatail: ShiftFromDB[];
   date?: string;
   modal: {
     type: "edit" | "create";
     item: BookingFromDB | null;
-  } | null;
+  };
   close: () => void;
 }
 
 export const BookingModal = ({
+  dateRange,
   modal,
   close,
   date,
@@ -33,64 +37,38 @@ export const BookingModal = ({
 }: BookingModalProps) => {
   const form = useForm({
     initialValues: {
-      id: "",
-      serviceId: "",
-      shiftId: "",
-      clientId: "",
-      startDate: date ? date.split("T")[0] : dayjs().format("YYYY-MM-DD"),
-      startTime: "12:00",
-      endTime: "13:00",
-      status: "PENDING",
+      id: modal.item?.id || "",
+      serviceId: modal.item?.service.id || "",
+      shiftId: modal.item?.shift.id || "",
+      clientId: modal.item?.client.id || "",
+      startDate: date
+        ? date.split("T")[0]
+        : modal.item
+          ? dayjs(modal.item.startTime).format("YYYY-MM-DD")
+          : dayjs().format("YYYY-MM-DD"),
+      startTime: modal.item
+        ? dayjs(modal.item.startTime).format("HH:mm")
+        : "12:00",
+      endTime: modal.item ? dayjs(modal.item.endTime).format("HH:mm") : "13:00",
+      status: modal.item?.status || "PENDING",
     },
     validate: schemaResolver(createBookingForm),
     validateInputOnBlur: true,
   });
 
-  const currentDate = form.values.startDate;
-
-  const dateProps = {
-    startDate: dayjs(currentDate)
-      .tz("Europe/Moscow")
-      .startOf("day")
-      .toISOString(),
-    endDate: dayjs(currentDate).tz("Europe/Moscow").endOf("day").toISOString(),
-  };
-
-  const CreateBooking = useCreateBooking(dateProps);
-  const UpdateBooking = useUpdateBooking(dateProps);
+  const CreateBooking = useCreateBooking(dateRange);
+  const UpdateBooking = useUpdateBooking(dateRange);
 
   const { data: services } = trpc.booking.getServices.useQuery();
   const { data: clients } = trpc.booking.getClients.useQuery();
 
-  useEffect(() => {
-    if (date) {
-      form.setFieldValue("startDate", date.split("T")[0]);
-    }
-  }, [date]);
-
-  useEffect(() => {
-    if (modal?.type === "edit" && modal.item) {
-      form.setValues({
-        id: modal.item.id,
-        serviceId: modal.item.service.id,
-        shiftId: modal.item.shift.id,
-        clientId: modal.item.client.id,
-        startDate: dayjs(modal.item.startTime).format("YYYY-MM-DD"),
-        startTime: dayjs(modal.item.startTime).format("HH:mm"),
-        endTime: dayjs(modal.item.endTime).format("HH:mm"),
-        status: modal.item.status,
-      });
-    }
-  }, [modal]);
-
   const handleSubmit = (value: createBookingFormOutput) => {
-    const dateOnly = value.startDate;
 
     const startTime = dayjs
-      .tz(`${dateOnly}T${value.startTime}:00`, "Europe/Moscow")
+      .tz(`${value.startDate}T${value.startTime}:00`, "Europe/Moscow")
       .toISOString();
     const endTime = dayjs
-      .tz(`${dateOnly}T${value.endTime}:00`, "Europe/Moscow")
+      .tz(`${value.startDate}T${value.endTime}:00`, "Europe/Moscow")
       .toISOString();
 
     const onSuccess = {
@@ -126,10 +104,7 @@ export const BookingModal = ({
     }
     CreateBooking.mutate(
       {
-        id: value.id,
-        serviceId: value.serviceId,
-        shiftId: value.shiftId,
-        clientId: value.clientId,
+        ...value,
         startTime: startTime,
         endTime: endTime,
         status: value.status as BookingStatus,
@@ -150,7 +125,6 @@ export const BookingModal = ({
       >
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack>
-            {/* 👇 Поле выбора даты — показывается только если date не передан */}
             {!date && (
               <DatePickerInput
                 label="Дата"
@@ -172,7 +146,12 @@ export const BookingModal = ({
               placeholder="Выберите исполнителя"
               data={dayDatail.map((shift) => ({
                 value: shift.id,
-                label: shift.worker.name,
+                label:
+                  shift.worker.name +
+                  " " +
+                  dayjs(shift.startTime).format("HH:mm") +
+                  "-" +
+                  dayjs(shift.endTime).format("HH:mm"),
               }))}
               searchable
               {...form.getInputProps("shiftId")}
