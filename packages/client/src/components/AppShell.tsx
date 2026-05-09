@@ -16,13 +16,13 @@ interface NavItem {
 export const AppSh = ({ children }: AppShProps) => {
   const [opened, { toggle }] = useDisclosure();
   const location = useLocation();
-
   const navList: NavItem[] = [
     { name: "Главная", link: "/workerDashbord" },
     { name: "Услуги", link: "/services" },
     { name: "Смены", link: "/shifts" },
     { name: "Записи", link: "/booking" },
     { name: "Мастера", link: "/workers" },
+    { name: "Клиенты", link: "/clients" },
   ];
 
   return (
