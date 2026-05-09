@@ -8,7 +8,7 @@ const checkOverlap = async (
   startDate: string,
   endDate: string,
   workerId: string,
-  excludeId?: string, // 👈 Параметр для исключения текущей смены
+  excludeId?: string, 
 ) => {
   const dayStart = dayjs(startDate).startOf("day").toDate();
   const dayEnd = dayjs(startDate).endOf("day").toDate();
@@ -16,7 +16,7 @@ const checkOverlap = async (
   return prisma.shift.findFirst({
     where: {
       workerId: workerId,
-      ...(excludeId && { id: { not: excludeId } }), // 👈 Исключаем себя
+      ...(excludeId && { id: { not: excludeId } }),
       AND: [
         { startTime: { gte: dayStart, lte: dayEnd } },
         {

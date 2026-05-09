@@ -6,8 +6,8 @@ import { useDateModal } from "src/components/DateModall";
 import type { BookingFromDB } from "shared";
 import { BookingModal } from "../DashboardPage/Booking/BookingModal";
 import { trpc } from "src/api/client";
-import { useDeleteShift } from "src/api/shifts/delete";
 import { confirmModal } from "src/utils/confirmModals";
+import { useDeleteBooking } from "src/api/booking/delete";
 
 export const BookingPage = () => {
   const { openDateModal, formatDate, getDateRange } = useDateModal();
@@ -19,10 +19,10 @@ export const BookingPage = () => {
   const BookingData = trpc.booking.getByDay.useQuery(getDateRange()).data;
   const dayDatail = trpc.shifts.getInDateRange.useQuery(getDateRange()).data;
 
-  const deleteService = useDeleteShift(getDateRange());
+  const deleteService = useDeleteBooking(getDateRange());
   const handleDelete = useCallback(
     async (id: string) => {
-      confirmModal("Вы действительно хотите удалить эту услугу?", () =>
+      confirmModal("Вы действительно хотите удалить эту запись?", () =>
         deleteService.mutate({ id: id }),
       );
     },

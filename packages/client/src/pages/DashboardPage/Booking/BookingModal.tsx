@@ -70,12 +70,6 @@ export const BookingModal = ({
       .tz(`${value.startDate}T${value.endTime}:00`, "Europe/Moscow")
       .toISOString();
 
-    const onSuccess = {
-      onSuccess: () => {
-        close();
-        form.reset();
-      },
-    };
     if (!!modal && modal?.type === "edit") {
       return UpdateBooking.mutate(
         {
@@ -98,7 +92,19 @@ export const BookingModal = ({
             },
           },
         },
-        onSuccess,
+        {
+          onSuccess: () => {
+            close();
+            form.reset();
+          },
+          onError: (error) => {
+            try {
+              form.setErrors(JSON.parse(error.message));
+            } catch {
+              form.setErrors({ email: error.message });
+            }
+          },
+        },
       );
     }
     CreateBooking.mutate(
@@ -108,7 +114,19 @@ export const BookingModal = ({
         endTime: endTime,
         status: value.status as BookingStatus,
       },
-      onSuccess,
+      {
+        onSuccess: () => {
+          close();
+          form.reset();
+        },
+        onError: (error) => {
+          try {
+            form.setErrors(JSON.parse(error.message));
+          } catch {
+            form.setErrors({ email: error.message });
+          }
+        },
+      },
     );
   };
 
