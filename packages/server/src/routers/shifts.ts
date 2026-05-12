@@ -1,6 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { protectedProcedure, router } from "../trpc";
-import { addShift, deleteShift, shiftsInDate, shiftsUpdate } from "shared";
+import {
+  addShift,
+  deleteShift,
+  shiftsInDate,
+  shiftsInDateToCalendar,
+  shiftsUpdate,
+} from "shared";
 import dayjs from "dayjs";
 import { prisma } from "../db/prisma";
 
@@ -8,7 +14,7 @@ const checkOverlap = async (
   startDate: string,
   endDate: string,
   workerId: string,
-  excludeId?: string, 
+  excludeId?: string,
 ) => {
   const dayStart = dayjs(startDate).startOf("day").toDate();
   const dayEnd = dayjs(startDate).endOf("day").toDate();
@@ -45,6 +51,61 @@ const checkOverlap = async (
 };
 
 export const shiftsRouter = router({
+  getInDateRangeToCalendarMenu: protectedProcedure
+    .input(shiftsInDateToCalendar)
+    .query(async ({ ctx, input }) => {
+      const { startDate, endDate, id } = input;
+      return ctx.prisma.shift.findMany({
+        where: {
+          workerId: id,
+          startTime: { gte: new Date(startDate) },
+          endTime: { lte: new Date(endDate) },
+        },
+        select: {
+          bookings: {
+            select: {
+              client: {
+                select: {
+                  id: true,
+                  name: true,
+                  phone: true,
+                },
+              },
+              startTime: true,
+              endTime: true,
+            },
+          },
+          id: true,
+          startTime: true,
+          endTime: true,
+          worker: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+        orderBy: { startTime: "asc" },
+      });
+    }),
+
+  getInDateRangeToCalendar: protectedProcedure
+    .input(shiftsInDateToCalendar)
+    .query(async ({ ctx, input }) => {
+      const { startDate, endDate, id } = input;
+      return ctx.prisma.shift.findMany({
+        where: {
+          workerId: id,
+          startTime: { gte: new Date(startDate) },
+          endTime: { lte: new Date(endDate) },
+        },
+        select: {
+          id: true,
+          startTime: true,
+        },
+        orderBy: { startTime: "asc" },
+      });
+    }),
   getInDateRange: protectedProcedure
     .input(shiftsInDate)
     .query(async ({ ctx, input }) => {

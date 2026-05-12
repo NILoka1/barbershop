@@ -7,6 +7,12 @@ export const shiftsInDate = z.object({
   endDate: z.string().datetime("Некорректная дата"),
 });
 
+export const shiftsInDateToCalendar = z.object({
+  id: z.string(),
+  startDate: z.string().datetime("Некорректная дата"),
+  endDate: z.string().datetime("Некорректная дата"),
+});
+
 export const addShift = z.object({
   startDate: z.string().datetime("Некорректная дата"),
   endDate: z.string().datetime("Некорректная дата"),

@@ -9,6 +9,7 @@ import WorkersPage from "./pages/workersPage/WorkersPage";
 import { DashboardPage } from "./pages/DashboardPage/DashboardPage";
 import { BookingPage } from "./pages/BookingPage/BookingPage";
 import { ClientsPage } from "./pages/ClientsPage/ClientsPage";
+import CalendarShiftsPage from "./pages/CalendarShiftsPage/CalendarShiftsPage";
 function App() {
   return (
     <BrowserRouter>
@@ -24,6 +25,7 @@ function App() {
               </AppSh>
             }
           >
+            <Route path="/calendarShifts" element={<CalendarShiftsPage />} />
             <Route path="/workerDashbord" element={<DashboardPage />} />
             <Route path="/services" element={<ServicesPage />}></Route>
             <Route path="/workers" element={<WorkersPage />} />

@@ -18,11 +18,12 @@ export const AppSh = ({ children }: AppShProps) => {
   const location = useLocation();
   const navList: NavItem[] = [
     { name: "Главная", link: "/workerDashbord" },
-    { name: "Услуги", link: "/services" },
+    { name: "Календарь смен", link: "/calendarShifts" },
     { name: "Смены", link: "/shifts" },
     { name: "Записи", link: "/booking" },
-    { name: "Мастера", link: "/workers" },
     { name: "Клиенты", link: "/clients" },
+    { name: "Мастера", link: "/workers" },
+    { name: "Услуги", link: "/services" },
   ];
 
   return (
