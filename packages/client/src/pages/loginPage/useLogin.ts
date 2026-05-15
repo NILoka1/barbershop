@@ -1,4 +1,4 @@
-import { useForm,schemaResolver } from "@mantine/form";
+import { useForm, schemaResolver } from "@mantine/form";
 import { loginSchema } from "shared";
 import { useLoginMutation } from "../../api/auth/login";
 
@@ -10,12 +10,20 @@ export const useLogin = () => {
       email: "",
       password: "",
     },
-    validate: schemaResolver(loginSchema, {sync: true}),
+    validate: schemaResolver(loginSchema, { sync: true }),
     validateInputOnBlur: true,
   });
 
   const handleSubmit = (values: typeof form.values) => {
-    loginMutation.mutate(values);
+    loginMutation.mutate(values, {
+      onError: (error) => {
+        try {
+          form.setErrors(JSON.parse(error.message));
+        } catch {
+          form.setErrors({ email: error.message });
+        }
+      },
+    });
   };
 
   return { form, handleSubmit };
