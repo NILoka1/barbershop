@@ -5,9 +5,13 @@ import { trpc } from "src/api/client";
 import AnalyticsCard from "./AnalyticsCard";
 
 const AnalyticsPage = () => {
+  const isAdmin =
+    trpc.auth.me.useQuery().data?.isAdmin ||
+    localStorage.getItem("isAdmin") === "true";
+
   const workers = trpc.workers.getAll.useQuery().data;
   const [selectedWorker, setSelectedWorker] = React.useState<string | null>(
-    null,
+    isAdmin ? null : localStorage.getItem("workerId"),
   );
 
   const [value, setValue] = useState<string | null>(dayjs().year().toString());
@@ -37,16 +41,18 @@ const AnalyticsPage = () => {
           value={value}
           onChange={setValue}
         />
-        <Select
-          label="Работник"
-          placeholder="Выберите работника"
-          data={workers.map((worker) => ({
-            value: worker.id,
-            label: worker.name,
-          }))}
-          value={selectedWorker}
-          onChange={setSelectedWorker}
-        />
+        {isAdmin && (
+          <Select
+            label="Работник"
+            placeholder="Выберите работника"
+            data={workers.map((worker) => ({
+              value: worker.id,
+              label: worker.name,
+            }))}
+            value={selectedWorker}
+            onChange={setSelectedWorker}
+          />
+        )}
       </Stack>
       <Paper withBorder shadow="md" w="100%" h="100%" p="md">
         <AnalyticsCard {...data.summary} bookings={data.months} />
