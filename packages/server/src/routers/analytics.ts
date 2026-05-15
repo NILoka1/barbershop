@@ -7,7 +7,7 @@ import {
 } from "shared";
 import { TRPCError } from "@trpc/server";
 
-export const bookingRouter = router({
+export const analyticsRouter = router({
   getAnalytics: adminProcedure
     .input(getAnalytics)
     .query(async ({ ctx, input }) => {
@@ -52,12 +52,13 @@ export const bookingRouter = router({
         monthlyStats[month].bookings.push(booking);
       }
 
+      const total = bookings.reduce((sum, b) => sum + Number(b.service.price), 0);
        return {
         months: Object.values(monthlyStats),
         summary: {
           totalBookings: bookings.length,
-          totalRevenue: bookings.reduce((sum, b) => sum + Number(b.service.price), 0),
-          averagePerMonth: bookings.length / 12,
+          totalRevenue: total,
+          averagePerMonth: total / 12,
         },
       };
     }),

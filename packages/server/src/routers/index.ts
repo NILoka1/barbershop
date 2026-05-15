@@ -1,4 +1,5 @@
 import { router } from '../trpc';
+import { analyticsRouter } from './analytics';
 import { authRouter } from './auth';
 import { bookingRouter } from './booking';
 import { ClientsRouter } from './clients';
@@ -13,6 +14,7 @@ export const appRouter = router({
   shifts: shiftsRouter,
   booking: bookingRouter,
   clients: ClientsRouter,
+  analytics: analyticsRouter,
 });
 
 export type AppRouter = typeof appRouter;
