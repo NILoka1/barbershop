@@ -10,6 +10,7 @@ import { DashboardPage } from "./pages/DashboardPage/DashboardPage";
 import { BookingPage } from "./pages/BookingPage/BookingPage";
 import { ClientsPage } from "./pages/ClientsPage/ClientsPage";
 import CalendarShiftsPage from "./pages/CalendarShiftsPage/CalendarShiftsPage";
+import AnalyticsPage from "./pages/АnalyticsPage/AnalyticsPage";
 function App() {
   return (
     <BrowserRouter>
@@ -32,6 +33,7 @@ function App() {
             <Route path="/shifts" element={<ShiftsPage />} />
             <Route path="/booking" element={<BookingPage />} />
             <Route path="/clients" element={<ClientsPage />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>
         </Route>
