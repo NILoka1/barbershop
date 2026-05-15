@@ -8,7 +8,7 @@ describe("App", () => {
   it("рендерит", () => {
     renderWithProviders(<App />);
 
-    expect(screen.getByText("Добро пожаловать")).toBeInTheDocument();
-    expect(screen.getByText("Войти")).toBeInTheDocument();
+    expect(screen.getByText("Записаться онлайн")).toBeInTheDocument();
+    expect(screen.getByText("Вход для сотрудников")).toBeInTheDocument();
   });
 });
