@@ -1,23 +1,18 @@
-import { adminProcedure, protectedProcedure, router } from "../trpc";
-import {
-  createBookingProps,
-  getAnalytics,
-  getBookingInDayProps,
-  UpdateBookingProps,
-} from "shared";
-import { TRPCError } from "@trpc/server";
+import { protectedProcedure, router } from "../trpc";
+import { getAnalytics } from "shared";
 
 export const analyticsRouter = router({
-  getAnalytics: adminProcedure
+  getAnalytics: protectedProcedure
     .input(getAnalytics)
     .query(async ({ ctx, input }) => {
       const startOfYear = new Date(input.startDate);
       const endOfYear = new Date(input.endDate);
+      const workerId = ctx.worker.isAdmin ? input.workerId : ctx.worker.id;
 
       const bookings = await ctx.prisma.booking.findMany({
         where: {
           startTime: { gte: startOfYear, lt: endOfYear },
-          ...(input.workerId && { shift: { workerId: input.workerId } }),
+          ...(workerId && { shift: { workerId: workerId } }),
         },
         include: {
           service: { select: { name: true, price: true } },
@@ -52,8 +47,11 @@ export const analyticsRouter = router({
         monthlyStats[month].bookings.push(booking);
       }
 
-      const total = bookings.reduce((sum, b) => sum + Number(b.service.price), 0);
-       return {
+      const total = bookings.reduce(
+        (sum, b) => sum + Number(b.service.price),
+        0,
+      );
+      return {
         months: Object.values(monthlyStats),
         summary: {
           totalBookings: bookings.length,
