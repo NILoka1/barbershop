@@ -7,3 +7,4 @@ export * from './validation/booking'
 export * from './types/shift'
 export * from './types/booking'
 export * from './types/client'
+export * from "./validation/analytics"
