@@ -7,6 +7,7 @@ export function useLoginMutation() {
     onSuccess: (data) => {
       console.log("✅ Успешный вход:", data);
       localStorage.setItem("token", data.token);
+      localStorage.setItem("isAdmin", data.worker.isAdmin.toString());
       nav("/workerDashbord");
     },
     onError: (error) => {
@@ -14,5 +15,3 @@ export function useLoginMutation() {
     },
   });
 }
-
-

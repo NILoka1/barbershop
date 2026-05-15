@@ -1,8 +1,9 @@
-import { AppShell, Burger, Button, Flex, NavLink } from "@mantine/core";
+import { AppShell, Burger, Flex, NavLink } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import type { ReactNode } from "react";
 import { ThemeToggle } from "./ThemeToggle";
+import { trpc } from "src/api/client";
 
 interface AppShProps {
   children: ReactNode;
@@ -22,10 +23,18 @@ export const AppSh = ({ children }: AppShProps) => {
     { name: "Смены", link: "/shifts" },
     { name: "Записи", link: "/booking" },
     { name: "Аналитика", link: "/analytics" },
-    { name: "Клиенты", link: "/clients" },
-    { name: "Мастера", link: "/workers" },
-    { name: "Услуги", link: "/services" },
   ];
+
+  const isAdmin =
+    trpc.auth.me.useQuery().data?.isAdmin ||
+    localStorage.getItem("isAdmin") === "true";
+  if (isAdmin) {
+    navList.push(
+      { name: "Клиенты", link: "/clients" },
+      { name: "Мастера", link: "/workers" },
+      { name: "Услуги", link: "/services" },
+    );
+  }
 
   return (
     <AppShell

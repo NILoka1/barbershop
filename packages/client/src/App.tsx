@@ -11,6 +11,7 @@ import { BookingPage } from "./pages/BookingPage/BookingPage";
 import { ClientsPage } from "./pages/ClientsPage/ClientsPage";
 import CalendarShiftsPage from "./pages/CalendarShiftsPage/CalendarShiftsPage";
 import AnalyticsPage from "./pages/АnalyticsPage/AnalyticsPage";
+import { AdminRoute } from "./components/AdminRoute";
 function App() {
   return (
     <BrowserRouter>
@@ -26,13 +27,16 @@ function App() {
               </AppSh>
             }
           >
+            <Route element={<AdminRoute />}>
+              <Route path="/services" element={<ServicesPage />}></Route>
+              <Route path="/workers" element={<WorkersPage />} />
+              <Route path="/clients" element={<ClientsPage />} />
+            </Route>
             <Route path="/calendarShifts" element={<CalendarShiftsPage />} />
             <Route path="/workerDashbord" element={<DashboardPage />} />
-            <Route path="/services" element={<ServicesPage />}></Route>
-            <Route path="/workers" element={<WorkersPage />} />
+
             <Route path="/shifts" element={<ShiftsPage />} />
             <Route path="/booking" element={<BookingPage />} />
-            <Route path="/clients" element={<ClientsPage />} />
             <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>
