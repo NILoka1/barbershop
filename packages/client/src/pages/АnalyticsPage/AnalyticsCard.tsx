@@ -112,7 +112,6 @@ const AnalyticsCard = React.memo(
                         overflow: "hidden",
                       }}
                     >
-                      {/* Фоновая полоса */}
                       <div
                         style={{
                           position: "absolute",

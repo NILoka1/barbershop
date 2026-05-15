@@ -7,10 +7,12 @@ export function useLoginMutation() {
     onSuccess: (data) => {
       console.log("✅ Успешный вход:", data);
       localStorage.setItem("token", data.token);
-      nav('/workerDashbord')
+      nav("/workerDashbord");
     },
     onError: (error) => {
       console.error("❌ Ошибка входа:", error.message);
     },
   });
 }
+
+

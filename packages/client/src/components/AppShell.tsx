@@ -1,6 +1,6 @@
-import { AppShell, Burger, Flex, NavLink } from "@mantine/core";
+import { AppShell, Burger, Button, Flex, NavLink } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import type { ReactNode } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -60,6 +60,16 @@ export const AppSh = ({ children }: AppShProps) => {
 
           <Flex>
             <ThemeToggle />
+            <NavLink
+              component={Link}
+              to="/login"
+              label="Выйти"
+              variant="filled"
+              color="red"
+              onClick={() => {
+                localStorage.removeItem("token");
+              }}
+            />
           </Flex>
         </Flex>
       </AppShell.Navbar>
