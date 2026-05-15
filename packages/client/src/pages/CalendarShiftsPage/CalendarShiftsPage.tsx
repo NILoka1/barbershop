@@ -8,8 +8,9 @@ import CalendarShiftsMenu from "./CalendarShiftsMenu";
 
 const CalendarShiftsPage = () => {
   const workers = trpc.workers.getAll.useQuery().data;
+
   const [selectedWorker, setSelectedWorker] = React.useState<string | null>(
-    workers?.[0]?.id ?? null,
+    localStorage.getItem("workerId"),
   );
 
   const [selected, setSelected] = React.useState<Date>(new Date());

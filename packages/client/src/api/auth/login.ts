@@ -8,6 +8,7 @@ export function useLoginMutation() {
       console.log("✅ Успешный вход:", data);
       localStorage.setItem("token", data.token);
       localStorage.setItem("isAdmin", data.worker.isAdmin.toString());
+      localStorage.setItem("workerId", data.worker.id);
       nav("/workerDashbord");
     },
     onError: (error) => {

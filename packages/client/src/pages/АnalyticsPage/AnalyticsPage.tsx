@@ -7,10 +7,10 @@ import AnalyticsCard from "./AnalyticsCard";
 const AnalyticsPage = () => {
   const workers = trpc.workers.getAll.useQuery().data;
   const [selectedWorker, setSelectedWorker] = React.useState<string | null>(
-    workers?.[0]?.id ?? null,
+    null,
   );
 
-  const [value, setValue] = useState<string | null>(new Date().toISOString());
+  const [value, setValue] = useState<string | null>(dayjs().year().toString());
   const { data } = trpc.analytics.getAnalytics.useQuery({
     startDate: dayjs(value).startOf("year").toISOString(),
     endDate: dayjs(value).endOf("year").toISOString(),
