@@ -1,18 +1,23 @@
-import { Flex, Paper, Stack, Text } from "@mantine/core";
-import { YearPicker } from "@mantine/dates";
+import { Flex, Paper, Select, Stack, Text } from "@mantine/core";
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import { trpc } from "src/api/client";
 import AnalyticsCard from "./AnalyticsCard";
 
 const AnalyticsPage = () => {
+  const workers = trpc.workers.getAll.useQuery().data;
+  const [selectedWorker, setSelectedWorker] = React.useState<string | null>(
+    workers?.[0]?.id ?? null,
+  );
+
   const [value, setValue] = useState<string | null>(new Date().toISOString());
   const { data } = trpc.analytics.getAnalytics.useQuery({
     startDate: dayjs(value).startOf("year").toISOString(),
     endDate: dayjs(value).endOf("year").toISOString(),
+    workerId: selectedWorker || undefined,
   });
 
-  if (!data) {
+  if (!data || !workers) {
     return <Text>Загрузка...</Text>;
   }
   if (data.months.length === 0) {
@@ -22,7 +27,26 @@ const AnalyticsPage = () => {
     <Flex w={"100%"} h={"100%"} gap={"md"}>
       <Stack>
         <Text>Аналитика</Text>
-        <YearPicker value={value} onChange={setValue} />
+        <Select
+          label="Выберите год"
+          placeholder="Год"
+          data={Array.from({ length: 10 }, (_, i) => ({
+            value: (new Date().getFullYear() - i).toString(),
+            label: (new Date().getFullYear() - i).toString(),
+          }))}
+          value={value}
+          onChange={setValue}
+        />
+        <Select
+          label="Работник"
+          placeholder="Выберите работника"
+          data={workers.map((worker) => ({
+            value: worker.id,
+            label: worker.name,
+          }))}
+          value={selectedWorker}
+          onChange={setSelectedWorker}
+        />
       </Stack>
       <Paper withBorder shadow="md" w="100%" h="100%" p="md">
         <AnalyticsCard {...data.summary} bookings={data.months} />
