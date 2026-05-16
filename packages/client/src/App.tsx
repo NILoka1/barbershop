@@ -12,12 +12,14 @@ import { ClientsPage } from "./pages/ClientsPage/ClientsPage";
 import CalendarShiftsPage from "./pages/CalendarShiftsPage/CalendarShiftsPage";
 import AnalyticsPage from "./pages/АnalyticsPage/AnalyticsPage";
 import { AdminRoute } from "./components/AdminRoute";
+import ForClientsPage from "./pages/ForClientsPage/ForClientsPage";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/forclients" element={<ForClientsPage />} />
 
         <Route element={<ProtectedRoute />}>
           <Route

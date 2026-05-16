@@ -12,14 +12,20 @@ import {
   SimpleGrid,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { IconScissors, IconBrush, IconMassage, IconClock, IconPhone, IconMapPin } from "@tabler/icons-react";
+import {
+  IconScissors,
+  IconBrush,
+  IconMassage,
+  IconClock,
+  IconPhone,
+  IconMapPin,
+} from "@tabler/icons-react";
 
 export const HomePage = () => {
   const navigate = useNavigate();
 
   return (
     <Flex direction="column" mih="100vh">
-      {/* Hero-секция */}
       <Flex
         direction="column"
         align="center"
@@ -27,7 +33,8 @@ export const HomePage = () => {
         py={60}
         px="md"
         style={{
-          background: "linear-gradient(135deg, var(--mantine-color-blue-6), var(--mantine-color-violet-6))",
+          background:
+            "linear-gradient(135deg, var(--mantine-color-blue-6), var(--mantine-color-violet-6))",
           color: "white",
         }}
       >
@@ -35,19 +42,19 @@ export const HomePage = () => {
           Барбершоп & Парикмахерская
         </Title>
         <Text size="lg" ta="center" maw={500} mb="xl" c="white" opacity={0.9}>
-          Запишитесь онлайн в любое удобное время. Выберите услугу, дату и мастера за пару минут.
+          Запишитесь онлайн в любое удобное время. Выберите услугу, дату и
+          мастера за пару минут.
         </Text>
         <Button
           size="lg"
           variant="white"
           color="dark"
-          onClick={() => navigate("/booking")}
+          onClick={() => navigate("/forclients")}
         >
           Записаться онлайн
         </Button>
       </Flex>
 
-      {/* Секция с преимуществами */}
       <Container size="md" py={60}>
         <Title order={3} ta="center" mb="xl">
           Почему выбирают нас
@@ -58,27 +65,45 @@ export const HomePage = () => {
             <ThemeIcon variant="light" color="blue" size="xl" mb="md" mx="auto">
               <IconClock size={24} />
             </ThemeIcon>
-            <Text fw={600} mb="xs">Удобная запись</Text>
+            <Text fw={600} mb="xs">
+              Удобная запись
+            </Text>
             <Text size="sm" c="dimmed">
               Выберите удобное время и мастера онлайн. Без звонков и ожидания.
             </Text>
           </Paper>
 
           <Paper withBorder p="xl" radius="md" ta="center">
-            <ThemeIcon variant="light" color="green" size="xl" mb="md" mx="auto">
+            <ThemeIcon
+              variant="light"
+              color="green"
+              size="xl"
+              mb="md"
+              mx="auto"
+            >
               <IconScissors size={24} />
             </ThemeIcon>
-            <Text fw={600} mb="xs">Профессиональные мастера</Text>
+            <Text fw={600} mb="xs">
+              Профессиональные мастера
+            </Text>
             <Text size="sm" c="dimmed">
               Опытные барберы и стилисты с многолетним стажем.
             </Text>
           </Paper>
 
           <Paper withBorder p="xl" radius="md" ta="center">
-            <ThemeIcon variant="light" color="violet" size="xl" mb="md" mx="auto">
+            <ThemeIcon
+              variant="light"
+              color="violet"
+              size="xl"
+              mb="md"
+              mx="auto"
+            >
               <IconPhone size={24} />
             </ThemeIcon>
-            <Text fw={600} mb="xs">Напоминания</Text>
+            <Text fw={600} mb="xs">
+              Напоминания
+            </Text>
             <Text size="sm" c="dimmed">
               Пришлём уведомление о записи, чтобы вы не забыли.
             </Text>
@@ -86,7 +111,6 @@ export const HomePage = () => {
         </SimpleGrid>
       </Container>
 
-      {/* Секция с популярными услугами */}
       <Container size="md" pb={60}>
         <Title order={3} ta="center" mb="xl">
           Наши услуги
@@ -101,7 +125,9 @@ export const HomePage = () => {
               <Text fw={600}>Мужская стрижка</Text>
             </Group>
             <Group justify="space-between">
-              <Badge variant="light" color="blue">30 мин</Badge>
+              <Badge variant="light" color="blue">
+                30 мин
+              </Badge>
               <Text fw={600}>от 1 500 ₽</Text>
             </Group>
           </Card>
@@ -114,7 +140,9 @@ export const HomePage = () => {
               <Text fw={600}>Стрижка бороды</Text>
             </Group>
             <Group justify="space-between">
-              <Badge variant="light" color="green">20 мин</Badge>
+              <Badge variant="light" color="green">
+                20 мин
+              </Badge>
               <Text fw={600}>от 800 ₽</Text>
             </Group>
           </Card>
@@ -127,7 +155,9 @@ export const HomePage = () => {
               <Text fw={600}>Чистка лица</Text>
             </Group>
             <Group justify="space-between">
-              <Badge variant="light" color="violet">60 мин</Badge>
+              <Badge variant="light" color="violet">
+                60 мин
+              </Badge>
               <Text fw={600}>от 2 000 ₽</Text>
             </Group>
           </Card>
