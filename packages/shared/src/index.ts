@@ -9,3 +9,4 @@ export * from './types/booking'
 export * from './types/client'
 export * from './types/analytics'
 export * from "./validation/analytics"
+export * from "./validation/forClients"
