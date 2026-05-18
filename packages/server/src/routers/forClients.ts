@@ -1,35 +1,38 @@
-import { getDataSchema, spareWindowSchema } from "shared";
+import { createBookingSchema, getDataSchema, spareWindowSchema } from "shared";
 import { publicProcedure, router } from "../trpc";
 import dayjs from "dayjs";
 import { TRPCError } from "@trpc/server";
+import { create } from "node:domain";
 
 export const forClientsRouter = router({
-  getData: publicProcedure.input(getDataSchema).query(async ({ ctx, input }) => {
-    const workers = await ctx.prisma.worker.findMany({
-      select: {
-        id: true,
-        name: true,
-      },
-      where: {
-        shifts: {
-          some: {
-            startTime: {
-              gte: dayjs(input.date).startOf("day").toDate(),
-              lte: dayjs(input.date).endOf("day").toDate(),
+  getData: publicProcedure
+    .input(getDataSchema)
+    .query(async ({ ctx, input }) => {
+      const workers = await ctx.prisma.worker.findMany({
+        select: {
+          id: true,
+          name: true,
+        },
+        where: {
+          shifts: {
+            some: {
+              startTime: {
+                gte: dayjs(input.date).startOf("day").toDate(),
+                lte: dayjs(input.date).endOf("day").toDate(),
+              },
             },
           },
         },
-      }
-    });
-    const services = await ctx.prisma.service.findMany({
-      select: {
-        id: true,
-        name: true,
-        price: true,
-      },
-    });
-    return { workers, services };
-  }),
+      });
+      const services = await ctx.prisma.service.findMany({
+        select: {
+          id: true,
+          name: true,
+          price: true,
+        },
+      });
+      return { workers, services };
+    }),
   getSpareWindows: publicProcedure
     .input(spareWindowSchema)
     .query(async ({ ctx, input }) => {
@@ -122,5 +125,66 @@ export const forClientsRouter = router({
       }
 
       return slots;
+    }),
+  createBooking: publicProcedure
+    .input(createBookingSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { name, phone, workerId, serviceId, startTime, endTime } = input;
+
+      const fieldErrors: Record<string, string> = {};
+
+      const service = await ctx.prisma.service.findUnique({
+        where: { id: serviceId },
+        select: { id: true },
+      });
+      const shift = await ctx.prisma.shift.findFirst({
+        where: {
+          workerId: workerId,
+          startTime: { lte: new Date(startTime) },
+          endTime: { gte: new Date(startTime) },
+        },
+      });
+
+      if (!service) {
+        fieldErrors.serviceId = "Услуга не найдена";
+      }
+      if (!shift) {
+        fieldErrors.shiftId = "Смена не найдена";
+      }
+
+      if (Object.keys(fieldErrors).length > 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: JSON.stringify(fieldErrors),
+        });
+      }
+
+      const existingShift = shift!;
+      const existingService = service!;
+
+      let client = await ctx.prisma.client.findFirst({
+        where: { phone: phone },
+      });
+
+      if (!client) {
+        client = await ctx.prisma.client.create({
+          data: {
+            name: name,
+            phone: phone,
+          },
+        });
+      }
+
+      await ctx.prisma.booking.create({
+        data: {
+          clientId: client.id,
+          shiftId: existingShift.id,
+          serviceId: existingService.id,
+          startTime: new Date(startTime),
+          endTime: new Date(endTime),
+          status: "PENDING",
+        },
+      });
+      return { success: true };
     }),
 });
