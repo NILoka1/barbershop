@@ -199,4 +199,58 @@ export const bookingRouter = router({
         },
       });
     }),
+  countBookingToConfirm: protectedProcedure.query(async ({ ctx }) => {
+    return (
+      await ctx.prisma.booking.findMany({
+        where: {
+          status: "PENDING",
+        },
+      })
+    ).length;
+  }),
+  BookingToConfirm: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.booking.findMany({
+      where: {
+        status: "PENDING",
+      },
+      select: {
+        client: {
+          select: {
+            name: true,
+            phone: true,
+          },
+        },
+        shift: {
+          select: {
+            worker: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        service: {
+          select: {
+            name: true,
+          },
+        },
+        startTime: true,
+        endTime: true,
+        id: true,
+      },
+    });
+  }),
+  сonfirmBooking: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.booking.update({
+        where: {
+          id: input.id,
+          status: "PENDING",
+        },
+        data: {
+          status: "CONFIRMED",
+        },
+      });
+    }),
 });
