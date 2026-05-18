@@ -13,6 +13,7 @@ import CalendarShiftsPage from "./pages/CalendarShiftsPage/CalendarShiftsPage";
 import AnalyticsPage from "./pages/АnalyticsPage/AnalyticsPage";
 import { AdminRoute } from "./components/AdminRoute";
 import ForClientsPage from "./pages/ForClientsPage/ForClientsPage";
+import ConfirmBookingPage from "./pages/ConfirmBookingPage/ConfirmBookingPage";
 function App() {
   return (
     <BrowserRouter>
@@ -36,6 +37,7 @@ function App() {
             </Route>
             <Route path="/calendarShifts" element={<CalendarShiftsPage />} />
             <Route path="/workerDashbord" element={<DashboardPage />} />
+            <Route path="/confirmBooking" element={<ConfirmBookingPage />} />
 
             <Route path="/shifts" element={<ShiftsPage />} />
             <Route path="/booking" element={<BookingPage />} />

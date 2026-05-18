@@ -1,4 +1,4 @@
-import { AppShell, Burger, Flex, NavLink } from "@mantine/core";
+import { AppShell, Badge, Burger, Flex, NavLink } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Link, useLocation } from "react-router-dom";
 import type { ReactNode } from "react";
@@ -12,14 +12,23 @@ interface AppShProps {
 interface NavItem {
   name: string;
   link: string;
+  additional?: string;
 }
 
 export const AppSh = ({ children }: AppShProps) => {
   const [opened, { toggle }] = useDisclosure();
   const location = useLocation();
+
+  const bookingToConfirm = trpc.booking.countBookingToConfirm.useQuery().data;
+
   const navList: NavItem[] = [
     { name: "Главная", link: "/workerDashbord" },
     { name: "Календарь смен", link: "/calendarShifts" },
+    {
+      name: "Ожидают",
+      link: "/confirmBooking",
+      additional: bookingToConfirm ? `${bookingToConfirm}` : undefined,
+    },
     { name: "Смены", link: "/shifts" },
     { name: "Записи", link: "/booking" },
     { name: "Аналитика", link: "/analytics" },
@@ -42,7 +51,7 @@ export const AppSh = ({ children }: AppShProps) => {
       padding="md"
       header={{ height: 60 }}
       navbar={{
-        width: 150,
+        width: 170,
         breakpoint: "sm",
         collapsed: { mobile: !opened },
       }}
@@ -63,6 +72,13 @@ export const AppSh = ({ children }: AppShProps) => {
                 active={location.pathname === item.link}
                 variant="filled"
                 onClick={toggle}
+                rightSection={
+                  item.additional ? (
+                    <Badge size="xs" variant="light" color="blue">
+                      {item.additional}
+                    </Badge>
+                  ) : undefined
+                }
               />
             ))}
           </Flex>

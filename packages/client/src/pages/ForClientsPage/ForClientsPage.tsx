@@ -38,7 +38,6 @@ const ForClientsPage = () => {
     { enabled: !!form.values.date },
   );
 
-  // 👇 Запрос слотов ТОЛЬКО когда выбраны работник и услуга
   const spareWindows = trpc.forClients.getSpareWindows.useQuery(
     {
       workerId: form.values.workerId!,
@@ -48,7 +47,7 @@ const ForClientsPage = () => {
     {
       enabled:
         !!form.values.workerId && !!form.values.serviceId && !!form.values.date,
-      staleTime: 30_000, // 👈 Не перезапрашивать 30 секунд
+      staleTime: 30_000,
     },
   );
 
@@ -59,7 +58,6 @@ const ForClientsPage = () => {
 
   const create = useCreateBookingForClients({ date: form.values.date });
 
-  // 👇 Мемоизируем группировку — пересчитывается только при изменении данных
   const groupedSlots = useMemo(() => {
     if (!spareWindows.data) return null;
 
@@ -114,7 +112,7 @@ const ForClientsPage = () => {
             placeholder="+7 123-456-7890"
             {...form.getInputProps("phone")}
           />
-          <DatePicker {...form.getInputProps("date")} />
+          <DatePicker minDate={new Date()} {...form.getInputProps("date")} />
           <Select
             searchable
             label="Работник"
@@ -208,15 +206,21 @@ const ForClientsPage = () => {
                               cursor: "pointer",
                             }}
                           >
-                            <Text size="sm">
-                              {new Date(slot.startTime).toLocaleTimeString(
-                                "ru-RU",
-                                {
+                            <Flex justify={"space-between"} align={"center"}>
+                              <Text size="sm">
+                                {slot.startTime.toLocaleTimeString("ru-RU", {
                                   hour: "2-digit",
                                   minute: "2-digit",
-                                },
-                              )}
-                            </Text>
+                                })}
+                              </Text>
+                              <Text size="xs" c="dimmed">
+                                до{" "}
+                                {slot.endTime.toLocaleTimeString("ru-RU", {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </Text>
+                            </Flex>
                           </Paper>
                         </UnstyledButton>
                       ))}
